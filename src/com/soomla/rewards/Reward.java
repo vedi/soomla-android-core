@@ -79,6 +79,15 @@ public abstract class Reward {
         return jsonObject;
     }
 
+    public static Reward fromJSONString(String jsonString) {
+        try {
+            JSONObject rewardObj = new JSONObject(jsonString);
+            return fromJSONObject(rewardObj);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
     public static Reward fromJSONObject(JSONObject jsonObject) {
 
         return sJSONFactory.create(jsonObject, sTypeMap);
