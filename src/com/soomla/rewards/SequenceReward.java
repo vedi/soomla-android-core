@@ -47,7 +47,7 @@ public class SequenceReward extends Reward {
      * @param rewards the list of rewards in the sequence
      *                this must not be null and contain at least 1 item
      */
-    protected SequenceReward(String rewardId, String name, List<Reward> rewards) {
+    public SequenceReward(String rewardId, String name, List<Reward> rewards) {
         super(rewardId, name);
 
         if (rewards == null || rewards.isEmpty()) {

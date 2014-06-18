@@ -52,7 +52,7 @@ public class RandomReward extends Reward {
      * @param rewards a list of rewards from which to choose the reward randomly
      *                this must not be null and contain at least 1 item
      */
-    protected RandomReward(String rewardId, String name, List<Reward> rewards) {
+    public RandomReward(String rewardId, String name, List<Reward> rewards) {
         super(rewardId, name);
 
         if (rewards == null || rewards.isEmpty()) {

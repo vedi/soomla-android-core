@@ -43,7 +43,7 @@ public abstract class Reward {
      * @param rewardId the reward's ID (unique id to distinguish between rewards).
      * @param name the reward's name.
      */
-    protected Reward(String rewardId, String name) {
+    public Reward(String rewardId, String name) {
         mRewardId = rewardId;
         mName = name;
     }

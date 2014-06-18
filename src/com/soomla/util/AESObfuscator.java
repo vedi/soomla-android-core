@@ -65,7 +65,7 @@ public class AESObfuscator {
         byte[] passwordData = null;
         String sec = Soomla.SECRET;
         if (sec.equals("SOOMLA_SEC")) {
-            SoomlaUtils.LogError(TAG, "You didn't provide a custom secret!!! Stopping now!");
+            SoomlaUtils.LogError(TAG, "You didn't provide a SOOMLA secret!!! Stopping now!");
 
             // TODO: Figure out how to terminate the app
 //            android.os.Process.killProcess(android.os.Process.myPid());

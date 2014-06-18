@@ -38,7 +38,7 @@ public class BadgeReward extends Reward {
      * @param rewardId see parent
      * @param name see parent
      */
-    protected BadgeReward(String rewardId, String name) {
+    public BadgeReward(String rewardId, String name) {
         super(rewardId, name);
     }
 
@@ -49,7 +49,7 @@ public class BadgeReward extends Reward {
      * @param name see parent
      * @param iconUrl the URL of the badge's icon
      */
-    protected BadgeReward(String rewardId, String name, String iconUrl) {
+    public BadgeReward(String rewardId, String name, String iconUrl) {
         super(rewardId, name);
         mIconUrl = iconUrl;
     }
