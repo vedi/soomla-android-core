@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
  * Utility to create LevelUp objects from JSON
@@ -32,7 +31,8 @@ import java.util.Map;
 public class JSONFactory<T> {
     public static final String TAG = "JSONFactory";
 
-    public T create(JSONObject jsonObject, Map<String, Class<? extends T>> typeMap) {
+    public T create(JSONObject jsonObject, String packageName) {
+
         if (jsonObject == null) {
             // warn
             return null;
@@ -40,14 +40,15 @@ public class JSONFactory<T> {
 
         T t = null;
         try {
-            String type = jsonObject.getString(com.soomla.data.JSONConsts.SOOM_TYPE);
-            Class<? extends T> clazz = typeMap.get(type);
+            String className = jsonObject.getString(com.soomla.data.JSONConsts.SOOM_CLASSNAME);
+            Class<? extends T> clazz = (Class<? extends T>) Class.forName(packageName + "." + className);
+            SoomlaUtils.LogError(TAG, "creating with: " + packageName + "." + className);
             if (clazz != null) {
                 final Constructor<? extends T> jsonCtor = clazz.getDeclaredConstructor(JSONObject.class);
                 t = jsonCtor.newInstance(jsonObject);
             }
             else {
-                SoomlaUtils.LogError(TAG, "unknown type:" + type);
+                SoomlaUtils.LogError(TAG, "unknown class name:" + className);
             }
 
         } catch (JSONException e) {
@@ -60,6 +61,8 @@ public class JSONFactory<T> {
             SoomlaUtils.LogError(TAG, "fromJSONObject no JSONObject constructor found:" + e.getMessage());
         } catch (InvocationTargetException e) {
             SoomlaUtils.LogError(TAG, "fromJSONObject InvocationTargetException:" + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            SoomlaUtils.LogError(TAG, "fromJSONObject ClassNotFoundException:" + e.getMessage());
         }
 
         return t;

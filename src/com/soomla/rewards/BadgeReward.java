@@ -30,12 +30,6 @@ import org.json.JSONObject;
  */
 public class BadgeReward extends Reward {
 
-    public static final String TYPE_NAME = "badge";
-
-    static  {
-        Reward.addRewardType(TYPE_NAME, BadgeReward.class);
-    }
-
     /**
      * Constructor
      *
@@ -81,7 +75,7 @@ public class BadgeReward extends Reward {
         JSONObject jsonObject = super.toJSONObject();
         try {
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARD_ICONURL, mIconUrl);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_TYPE,TYPE_NAME);
+            jsonObject.put(com.soomla.data.JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }

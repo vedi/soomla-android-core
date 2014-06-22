@@ -25,9 +25,6 @@ import com.soomla.SoomlaUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A reward is an entity which can be earned by the user for meeting certain
  * criteria in game progress.  For example - a user can earn a badge for completing
@@ -88,13 +85,9 @@ public abstract class Reward {
         }
     }
 
-    public static void addRewardType(String type, Class<? extends Reward> cls) {
-        sTypeMap.put(type, cls);
-    }
-
     public static Reward fromJSONObject(JSONObject jsonObject) {
 
-        return sJSONFactory.create(jsonObject, sTypeMap);
+        return sJSONFactory.create(jsonObject, Reward.class.getPackage().getName());
 
 //        if(jsonObject == null) {
 //            SoomlaUtils.LogWarning(TAG, "fromJSONObject: jsonObject is null");
@@ -104,7 +97,7 @@ public abstract class Reward {
 //        Reward reward = null;
 //
 //        try {
-//            String type = jsonObject.getString(BPJSONConsts.SOOM_TYPE);
+//            String type = jsonObject.getString(BPJSONConsts.SOOM_CLASSNAME);
 //            if (type.equals(BadgeReward.TYPE_NAME)) {
 //                reward = new BadgeReward(jsonObject);
 //            }
@@ -217,8 +210,6 @@ public abstract class Reward {
     private static final String TAG = "SOOMLA Reward";
 
     private static JSONFactory<Reward> sJSONFactory = new JSONFactory<Reward>();
-    private static Map<String, Class<? extends Reward>> sTypeMap =
-            new HashMap<String, Class<? extends Reward>>();
 
     private String mRewardId;
     private String mName;

@@ -37,12 +37,6 @@ import java.util.List;
  */
 public class SequenceReward extends Reward {
 
-    public static final String TYPE_NAME = "sequence";
-
-    static  {
-        Reward.addRewardType(TYPE_NAME, SequenceReward.class);
-    }
-
     /**
      * Constructor
      *
@@ -81,7 +75,7 @@ public class SequenceReward extends Reward {
 
         for(int i=0; i<rewardsArr.length(); i++) {
             JSONObject rewardJSON = rewardsArr.getJSONObject(i);
-            Reward reward = Reward.fromJSONObject(rewardJSON);
+            Reward reward = fromJSONObject(rewardJSON);
             if (reward != null) {
                 mRewards.add(reward);
             }
@@ -101,7 +95,7 @@ public class SequenceReward extends Reward {
                 rewardsArr.put(reward.toJSONObject());
             }
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARDS, rewardsArr);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_TYPE, TYPE_NAME);
+            jsonObject.put(com.soomla.data.JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }

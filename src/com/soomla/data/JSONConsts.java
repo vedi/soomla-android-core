@@ -27,7 +27,7 @@ public class JSONConsts {
     public static final String SOOM_ASSOCITEMID       = "associatedItemId";
     public static final String SOOM_DESIRED_BALANCE   = "desiredBalance";
     public static final String SOOM_NAME              = "name";
-    public static final String SOOM_TYPE              = "jsonType";
+    public static final String SOOM_CLASSNAME         = "className";
 
 
     /** Reward **/

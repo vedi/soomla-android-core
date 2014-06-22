@@ -42,12 +42,6 @@ import java.util.Random;
  */
 public class RandomReward extends Reward {
 
-    public static final String TYPE_NAME = "random";
-
-    static  {
-        Reward.addRewardType(TYPE_NAME, RandomReward.class);
-    }
-
     /**
      * Constructor
      *
@@ -111,7 +105,7 @@ public class RandomReward extends Reward {
                 rewardsArr.put(reward.toJSONObject());
             }
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARDS, rewardsArr);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_TYPE, TYPE_NAME);
+            jsonObject.put(com.soomla.data.JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }
