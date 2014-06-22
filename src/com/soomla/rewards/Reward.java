@@ -88,6 +88,10 @@ public abstract class Reward {
         }
     }
 
+    public static void addRewardType(String type, Class<? extends Reward> cls) {
+        sTypeMap.put(type, cls);
+    }
+
     public static Reward fromJSONObject(JSONObject jsonObject) {
 
         return sJSONFactory.create(jsonObject, sTypeMap);
@@ -215,12 +219,6 @@ public abstract class Reward {
     private static JSONFactory<Reward> sJSONFactory = new JSONFactory<Reward>();
     private static Map<String, Class<? extends Reward>> sTypeMap =
             new HashMap<String, Class<? extends Reward>>();
-    static {
-        sTypeMap.put(BadgeReward.TYPE_NAME, BadgeReward.class);
-        sTypeMap.put(RandomReward.TYPE_NAME, RandomReward.class);
-        sTypeMap.put(SequenceReward.TYPE_NAME, SequenceReward.class);
-//        sTypeMap.put(VirtualItemReward.TYPE_NAME, VirtualItemReward.class);
-    }
 
     private String mRewardId;
     private String mName;

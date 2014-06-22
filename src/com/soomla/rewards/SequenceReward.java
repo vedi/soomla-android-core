@@ -39,6 +39,10 @@ public class SequenceReward extends Reward {
 
     public static final String TYPE_NAME = "sequence";
 
+    static  {
+        Reward.addRewardType(TYPE_NAME, SequenceReward.class);
+    }
+
     /**
      * Constructor
      *

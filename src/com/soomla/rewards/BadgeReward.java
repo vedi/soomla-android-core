@@ -32,6 +32,10 @@ public class BadgeReward extends Reward {
 
     public static final String TYPE_NAME = "badge";
 
+    static  {
+        Reward.addRewardType(TYPE_NAME, BadgeReward.class);
+    }
+
     /**
      * Constructor
      *

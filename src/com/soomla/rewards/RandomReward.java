@@ -44,6 +44,10 @@ public class RandomReward extends Reward {
 
     public static final String TYPE_NAME = "random";
 
+    static  {
+        Reward.addRewardType(TYPE_NAME, RandomReward.class);
+    }
+
     /**
      * Constructor
      *
