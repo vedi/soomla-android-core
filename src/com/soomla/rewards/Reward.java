@@ -17,7 +17,6 @@
 package com.soomla.rewards;
 
 import com.soomla.data.RewardStorage;
-import com.soomla.events.RewardTakenEvent;
 import com.soomla.util.JSONFactory;
 import com.soomla.BusProvider;
 import com.soomla.SoomlaUtils;
@@ -154,7 +153,6 @@ public abstract class Reward {
 
         if (takeInner()) {
             RewardStorage.setRewardStatus(this, false);
-            BusProvider.getInstance().post(new RewardTakenEvent(this));
             return true;
         }
 

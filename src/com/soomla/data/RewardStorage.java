@@ -19,6 +19,7 @@ package com.soomla.data;
 import com.soomla.BusProvider;
 import com.soomla.SoomlaConfig;
 import com.soomla.events.RewardGivenEvent;
+import com.soomla.events.RewardTakenEvent;
 import com.soomla.rewards.Reward;
 
 /**
@@ -68,6 +69,9 @@ public class RewardStorage {
             }
         } else {
             KeyValueStorage.deleteKeyValue(key);
+            if (notify) {
+                BusProvider.getInstance().post(new RewardTakenEvent(reward));
+            }
         }
     }
 
