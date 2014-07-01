@@ -21,6 +21,7 @@ import com.soomla.SoomlaConfig;
 import com.soomla.events.RewardGivenEvent;
 import com.soomla.events.RewardTakenEvent;
 import com.soomla.rewards.Reward;
+import com.soomla.rewards.SequenceReward;
 
 /**
  * A utility class for persisting and querying the state of rewards.
@@ -97,11 +98,11 @@ public class RewardStorage {
     /**
      * Retrieves the index of the last reward given in a sequence of rewards.
      *
-     * @param reward the reward to check
+     * @param sequenceReward the reward to check
      * @return the index of the reward in the sequence
      */
-    public static int getLastSeqIdxGiven(Reward reward) {
-        String rewardId = reward.getRewardId();
+    public static int getLastSeqIdxGiven(SequenceReward sequenceReward) {
+        String rewardId = sequenceReward.getRewardId();
         String key = keyRewardIdxSeqGiven(rewardId);
 
         String val = KeyValueStorage.getValue(key);
@@ -115,11 +116,11 @@ public class RewardStorage {
     /**
      * Sets the index of the last reward given in a sequence of rewards.
      *
-     * @param reward the reward who's index is to be set
+     * @param sequenceReward the reward who's index is to be set
      * @param idx the index to set
      */
-    public static void setLastSeqIdxGiven(Reward reward, int idx) {
-        String rewardId = reward.getRewardId();
+    public static void setLastSeqIdxGiven(SequenceReward sequenceReward, int idx) {
+        String rewardId = sequenceReward.getRewardId();
         String key = keyRewardIdxSeqGiven(rewardId);
 
         KeyValueStorage.setValue(key, String.valueOf(idx));
