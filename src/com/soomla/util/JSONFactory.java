@@ -40,9 +40,10 @@ public class JSONFactory<T> {
 
         T t = null;
         try {
+//            SoomlaUtils.LogDebug(TAG, jsonObject.toString());
             String className = jsonObject.getString(com.soomla.data.JSONConsts.SOOM_CLASSNAME);
             Class<? extends T> clazz = (Class<? extends T>) Class.forName(packageName + "." + className);
-            SoomlaUtils.LogError(TAG, "creating with: " + packageName + "." + className);
+            SoomlaUtils.LogDebug(TAG, "creating with: " + packageName + "." + className);
             if (clazz != null) {
                 final Constructor<? extends T> jsonCtor = clazz.getDeclaredConstructor(JSONObject.class);
                 t = jsonCtor.newInstance(jsonObject);
