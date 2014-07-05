@@ -127,9 +127,11 @@ public abstract class Reward {
      * @return if the reward was actually given
      */
     public boolean give() {
-        if (RewardStorage.isRewardGiven(this) && !mRepeatable) {
-            SoomlaUtils.LogDebug(TAG, "Reward was already given and is not repeatable. id: " + getRewardId());
-            return false;
+        if (!mRepeatable) {
+            if (RewardStorage.isRewardGiven(this)) {
+                SoomlaUtils.LogDebug(TAG, "Reward was already given and is not repeatable. id: " + getRewardId());
+                return false;
+            }
         }
 
         if (giveInner()) {
