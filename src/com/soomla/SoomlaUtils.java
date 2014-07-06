@@ -80,5 +80,5 @@ public class SoomlaUtils {
 
     /** Private Members **/
 
-    private static String TAG = "SOOMLA StoreUtils"; //used for Log messages
+    private static String TAG = "SOOMLA SoomlaUtils"; //used for Log messages
 }

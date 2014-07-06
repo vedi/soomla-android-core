@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
  * (Pretty much one step before using Gson/Jackson)
  */
 public class JSONFactory<T> {
-    public static final String TAG = "JSONFactory";
+    public static final String TAG = "SOOMLA JSONFactory";
 
     public T create(JSONObject jsonObject, String packageName) {
 
