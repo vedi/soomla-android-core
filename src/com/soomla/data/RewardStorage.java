@@ -18,6 +18,7 @@ package com.soomla.data;
 
 import com.soomla.BusProvider;
 import com.soomla.SoomlaConfig;
+import com.soomla.SoomlaUtils;
 import com.soomla.events.RewardGivenEvent;
 import com.soomla.events.RewardTakenEvent;
 import com.soomla.rewards.Reward;
@@ -32,6 +33,8 @@ import com.soomla.rewards.SequenceReward;
  * Created by refaelos on 13/05/14.
  */
 public class RewardStorage {
+
+    private static final String TAG = "SOOMLA RewardStorage";
 
     private static String keyRewards(String rewardId, String postfix) {
         return SoomlaConfig.DB_KEY_PREFIX + "rewards." + rewardId + "." + postfix;
@@ -61,6 +64,13 @@ public class RewardStorage {
     public static void setRewardStatus(Reward reward, boolean give, boolean notify) {
         String rewardId = reward.getRewardId();
         String key = keyRewardGiven(rewardId);
+
+        // todo: also consider take + not owned (with respect to repeatable..)
+        boolean giveAndOwned = give && reward.isOwned() && !reward.isRepeatable();
+        if(giveAndOwned) {
+            notify = false;
+            SoomlaUtils.LogWarning(TAG, "non repeatable reward already given [suppress notify]:" + rewardId);
+        }
 
         if (give) {
             KeyValueStorage.setValue(key, "yes");
