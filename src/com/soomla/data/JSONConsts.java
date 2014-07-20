@@ -23,7 +23,9 @@ package com.soomla.data;
 public class JSONConsts {
 
     /** Global **/
-
+    public static final String SOOM_ENTITY_NAME       = "name";
+    public static final String SOOM_ENTITY_DESCRIPTION = "description";
+    public static final String SOOM_ENTITY_ID         = "itemId";
     public static final String SOOM_ASSOCITEMID       = "associatedItemId";
     public static final String SOOM_DESIRED_BALANCE   = "desiredBalance";
     public static final String SOOM_NAME              = "name";
