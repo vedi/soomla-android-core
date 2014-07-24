@@ -16,6 +16,7 @@ It includes:
 * Utilities for `String` and `JSONObject` manipulation.
 * Utilities for Logging and encryption.
 * An event bus (using Square's otto) for publish-subscribe events.
+* `SoomlaEntity` - the base class from which all SOOMLA domain objects derive
 * Reward domain objects and events - used to grant your users rewards.
 
 SOOMLA modules internally use these features, though we encourage you to use them for your own needs as well.  For example, use our key-value storage for custom game data for usage across game sessions.
