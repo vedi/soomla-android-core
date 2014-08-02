@@ -62,6 +62,7 @@ public class JSONFactory<T> {
             SoomlaUtils.LogError(TAG, "fromJSONObject no JSONObject constructor found:" + e.getMessage());
         } catch (InvocationTargetException e) {
             SoomlaUtils.LogError(TAG, "fromJSONObject InvocationTargetException:" + e.getMessage());
+            SoomlaUtils.LogError(TAG, "fromJSONObject InvocationTargetException[cause]:" + e.getCause());
         } catch (ClassNotFoundException e) {
             SoomlaUtils.LogError(TAG, "fromJSONObject ClassNotFoundException:" + e.getMessage());
         }

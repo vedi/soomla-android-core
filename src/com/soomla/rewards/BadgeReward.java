@@ -63,7 +63,9 @@ public class BadgeReward extends Reward {
         super(jsonObject);
         try {
             mIconUrl = jsonObject.getString(com.soomla.data.JSONConsts.SOOM_REWARD_ICONURL);
-        } catch (JSONException ignored) {}
+        } catch (JSONException ignored) {
+            SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
+        }
     }
 
     /**
