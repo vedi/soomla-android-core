@@ -113,8 +113,6 @@ public abstract class SoomlaEntity {
     private static final String TAG = "SOOMLA SoomlaEntity"; //used for Log messages
 
     protected String mName;
-
     protected String mDescription;
-
     protected String mID;
 }
