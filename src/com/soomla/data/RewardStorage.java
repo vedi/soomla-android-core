@@ -62,7 +62,7 @@ public class RewardStorage {
     }
 
     public static void setRewardStatus(Reward reward, boolean give, boolean notify) {
-        String rewardId = reward.getRewardId();
+        String rewardId = reward.getID();
         String key = keyRewardGiven(rewardId);
 
         // todo: also consider take + not owned (with respect to repeatable..)
@@ -94,7 +94,7 @@ public class RewardStorage {
      * <code>false</code> otherwise
      */
     public static boolean isRewardGiven(Reward reward) {
-        String rewardId = reward.getRewardId();
+        String rewardId = reward.getID();
         String key = keyRewardGiven(rewardId);
 
         String val = KeyValueStorage.getValue(key);
@@ -112,7 +112,7 @@ public class RewardStorage {
      * @return the index of the reward in the sequence
      */
     public static int getLastSeqIdxGiven(SequenceReward sequenceReward) {
-        String rewardId = sequenceReward.getRewardId();
+        String rewardId = sequenceReward.getID();
         String key = keyRewardIdxSeqGiven(rewardId);
 
         String val = KeyValueStorage.getValue(key);
@@ -130,7 +130,7 @@ public class RewardStorage {
      * @param idx the index to set
      */
     public static void setLastSeqIdxGiven(SequenceReward sequenceReward, int idx) {
-        String rewardId = sequenceReward.getRewardId();
+        String rewardId = sequenceReward.getID();
         String key = keyRewardIdxSeqGiven(rewardId);
 
         KeyValueStorage.setValue(key, String.valueOf(idx));

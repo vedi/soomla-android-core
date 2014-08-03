@@ -95,7 +95,6 @@ public class SequenceReward extends Reward {
                 rewardsArr.put(reward.toJSONObject());
             }
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARDS, rewardsArr);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }
@@ -135,7 +134,7 @@ public class SequenceReward extends Reward {
      */
     public boolean forceNextRewardToGive(Reward reward) {
         for (int i = 0; i < mRewards.size(); i++) {
-            if (mRewards.get(i).getRewardId().equals(reward.getRewardId())) {
+            if (mRewards.get(i).getID().equals(reward.getID())) {
                 RewardStorage.setLastSeqIdxGiven(this, i - 1);
                 return true;
             }

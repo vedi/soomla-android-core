@@ -61,6 +61,7 @@ public abstract class SoomlaEntity {
             jsonObject.put(JSONConsts.SOOM_ENTITY_NAME, mName);
             jsonObject.put(JSONConsts.SOOM_ENTITY_DESCRIPTION, mDescription);
             jsonObject.put(JSONConsts.SOOM_ENTITY_ID, mID);
+            jsonObject.put(JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }

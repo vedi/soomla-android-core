@@ -105,7 +105,6 @@ public class RandomReward extends Reward {
                 rewardsArr.put(reward.toJSONObject());
             }
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARDS, rewardsArr);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }

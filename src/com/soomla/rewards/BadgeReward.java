@@ -77,7 +77,6 @@ public class BadgeReward extends Reward {
         JSONObject jsonObject = super.toJSONObject();
         try {
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARD_ICONURL, mIconUrl);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_CLASSNAME, getClass().getSimpleName());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }

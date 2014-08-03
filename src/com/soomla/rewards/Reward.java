@@ -16,6 +16,7 @@
 
 package com.soomla.rewards;
 
+import com.soomla.SoomlaEntity;
 import com.soomla.data.RewardStorage;
 import com.soomla.util.JSONFactory;
 import com.soomla.BusProvider;
@@ -31,7 +32,7 @@ import org.json.JSONObject;
  * <code>VirtualItem</code>s: grant a reward by giving it and recall a
  * reward by taking it.
  */
-public abstract class Reward {
+public abstract class Reward extends SoomlaEntity {
 
     /**
      * Constructor
@@ -40,7 +41,7 @@ public abstract class Reward {
      * @param name the reward's name.
      */
     public Reward(String rewardId, String name) {
-        mRewardId = rewardId;
+        super(name, "", rewardId);
         mName = name;
     }
 
@@ -52,8 +53,7 @@ public abstract class Reward {
      * @throws JSONException
      */
     public Reward(JSONObject jsonObject) throws JSONException {
-        mRewardId = jsonObject.getString(com.soomla.data.JSONConsts.SOOM_REWARD_REWARDID);
-        mName = jsonObject.optString(com.soomla.data.JSONConsts.SOOM_NAME);
+        super(jsonObject);
         mRepeatable = jsonObject.optBoolean(com.soomla.data.JSONConsts.SOOM_REWARD_REPEAT);
     }
 
@@ -63,10 +63,8 @@ public abstract class Reward {
      * @return A <code>JSONObject</code> representation of the current <code>Reward</code>.
      */
     public JSONObject toJSONObject(){
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject = super.toJSONObject();
         try {
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARD_REWARDID, mRewardId);
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_NAME, mName);
             jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARD_REPEAT, mRepeatable);
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
@@ -85,7 +83,6 @@ public abstract class Reward {
     }
 
     public static Reward fromJSONObject(JSONObject jsonObject) {
-
         return sJSONFactory.create(jsonObject, Reward.class.getPackage().getName());
 
 //        if(jsonObject == null) {
@@ -128,7 +125,7 @@ public abstract class Reward {
      */
     public boolean give() {
         if (!mRepeatable && RewardStorage.isRewardGiven(this)) {
-            SoomlaUtils.LogDebug(TAG, "Reward was already given and is not repeatable. id: " + getRewardId());
+            SoomlaUtils.LogDebug(TAG, "Reward was already given and is not repeatable. id: " + mID);
             return false;
         }
 
@@ -147,7 +144,7 @@ public abstract class Reward {
      */
     public boolean take() {
         if (!RewardStorage.isRewardGiven(this)) {
-            SoomlaUtils.LogDebug(TAG, "Reward not given. id: " + getRewardId());
+            SoomlaUtils.LogDebug(TAG, "Reward not given. id: " + mID);
             return false;
         }
 
@@ -187,14 +184,6 @@ public abstract class Reward {
 
     /** Setters and Getters **/
 
-    public String getRewardId() {
-        return mRewardId;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
     public boolean isRepeatable() {
         return mRepeatable;
     }
@@ -209,8 +198,6 @@ public abstract class Reward {
 
     private static JSONFactory<Reward> sJSONFactory = new JSONFactory<Reward>();
 
-    private String mRewardId;
-    private String mName;
     private boolean mRepeatable = false;
 }
 
