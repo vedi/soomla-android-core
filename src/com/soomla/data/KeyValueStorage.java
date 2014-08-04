@@ -17,6 +17,7 @@
 package com.soomla.data;
 
 import android.text.TextUtils;
+
 import com.soomla.SoomlaApp;
 import com.soomla.SoomlaConfig;
 import com.soomla.SoomlaUtils;

@@ -18,6 +18,7 @@ package com.soomla;
 
 import android.os.Handler;
 import android.os.Looper;
+
 import com.squareup.otto.Bus;
 
 /**

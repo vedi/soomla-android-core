@@ -17,10 +17,9 @@
 package com.soomla.rewards;
 
 import com.soomla.SoomlaEntity;
+import com.soomla.SoomlaUtils;
 import com.soomla.data.RewardStorage;
 import com.soomla.util.JSONFactory;
-import com.soomla.BusProvider;
-import com.soomla.SoomlaUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
