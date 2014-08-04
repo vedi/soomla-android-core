@@ -31,7 +31,7 @@ import org.json.JSONObject;
  * <code>VirtualItem</code>s: grant a reward by giving it and recall a
  * reward by taking it.
  */
-public abstract class Reward extends SoomlaEntity {
+public abstract class Reward extends SoomlaEntity<Reward> {
 
     /**
      * Constructor

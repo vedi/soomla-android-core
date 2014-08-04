@@ -16,13 +16,18 @@
 
 package com.soomla;
 
+import android.text.TextUtils;
+
 import com.soomla.data.JSONConsts;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
-public abstract class SoomlaEntity {
+
+public abstract class SoomlaEntity<T> {
 
     /**
      * Constructor.
@@ -56,6 +61,11 @@ public abstract class SoomlaEntity {
      * @return A <code>JSONObject</code> representation of the current <code>SoomlaEntity</code>.
      */
     public JSONObject toJSONObject(){
+        if (TextUtils.isEmpty(this.mID)) {
+            SoomlaUtils.LogError(TAG, "This is BAD! We don't have ID in the this SoomlaEntity. Stopping here.");
+            return null;
+        }
+
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(JSONConsts.SOOM_ENTITY_NAME, mName);
@@ -94,6 +104,27 @@ public abstract class SoomlaEntity {
         return mID != null ? mID.hashCode() : 0;
     }
 
+    public T clone(String newId) {
+        JSONObject obj = this.toJSONObject();
+        try {
+            obj.put(JSONConsts.SOOM_ENTITY_ID, newId);
+
+            final Constructor<? extends SoomlaEntity> jsonCtor = ((Class<? extends SoomlaEntity>)getClass()).getDeclaredConstructor(JSONObject.class);
+            return (T) jsonCtor.newInstance(obj);
+
+        } catch (JSONException e) {
+            SoomlaUtils.LogError(TAG, "Error when trying to clone SoomlaEntity(" + getClass().getSimpleName() + "): " + e.getLocalizedMessage());
+        } catch (InvocationTargetException e) {
+            SoomlaUtils.LogError(TAG, "Error when trying to clone SoomlaEntity(" + getClass().getSimpleName() + "): " + e.getLocalizedMessage());
+        } catch (NoSuchMethodException e) {
+            SoomlaUtils.LogError(TAG, "Error when trying to clone SoomlaEntity(" + getClass().getSimpleName() + "): " + e.getLocalizedMessage());
+        } catch (InstantiationException e) {
+            SoomlaUtils.LogError(TAG, "Error when trying to clone SoomlaEntity(" + getClass().getSimpleName() + "): " + e.getLocalizedMessage());
+        } catch (IllegalAccessException e) {
+            SoomlaUtils.LogError(TAG, "Error when trying to clone SoomlaEntity(" + getClass().getSimpleName() + "): " + e.getLocalizedMessage());
+        }
+        return null;
+    }
 
     /** Setters and Getters **/
 
