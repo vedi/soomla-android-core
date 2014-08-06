@@ -18,6 +18,8 @@ package com.soomla.rewards;
 
 import com.soomla.SoomlaEntity;
 import com.soomla.SoomlaUtils;
+import com.soomla.TimeStrategy;
+import com.soomla.data.JSONConsts;
 import com.soomla.data.RewardStorage;
 import com.soomla.util.JSONFactory;
 
@@ -41,7 +43,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      */
     public Reward(String rewardId, String name) {
         super(name, "", rewardId);
-        mName = name;
+        mTimeStrategy = TimeStrategy.Once();
     }
 
     /**
@@ -53,7 +55,12 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      */
     public Reward(JSONObject jsonObject) throws JSONException {
         super(jsonObject);
-        mRepeatable = jsonObject.optBoolean(com.soomla.data.JSONConsts.SOOM_REWARD_REPEAT);
+        JSONObject timeStrategyObj = jsonObject.optJSONObject(JSONConsts.SOOM_TIME_STRATEGY);
+        if (timeStrategyObj != null) {
+            mTimeStrategy = new TimeStrategy(timeStrategyObj);
+        } else {
+            mTimeStrategy = null;
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
     public JSONObject toJSONObject(){
         JSONObject jsonObject = super.toJSONObject();
         try {
-            jsonObject.put(com.soomla.data.JSONConsts.SOOM_REWARD_REPEAT, mRepeatable);
+            jsonObject.put(JSONConsts.SOOM_TIME_STRATEGY, mTimeStrategy.toJSONObject());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }
@@ -83,36 +90,6 @@ public abstract class Reward extends SoomlaEntity<Reward> {
 
     public static Reward fromJSONObject(JSONObject jsonObject) {
         return sJSONFactory.create(jsonObject, Reward.class.getPackage().getName());
-
-//        if(jsonObject == null) {
-//            SoomlaUtils.LogWarning(TAG, "fromJSONObject: jsonObject is null");
-//            return null;
-//        }
-//
-//        Reward reward = null;
-//
-//        try {
-//            String type = jsonObject.getString(BPJSONConsts.SOOM_CLASSNAME);
-//            if (type.equals(BadgeReward.TYPE_NAME)) {
-//                reward = new BadgeReward(jsonObject);
-//            }
-//            else if (type.equals(VirtualItemReward.TYPE_NAME)) {
-//                reward = new VirtualItemReward(jsonObject);
-//            }
-//            else if (type.equals(RandomReward.TYPE_NAME)) {
-//                reward = new RandomReward(jsonObject);
-//            }
-//            else if (type.equals(SequenceReward.TYPE_NAME)) {
-//                reward = new SequenceReward(jsonObject);
-//            }
-//            else {
-//                SoomlaUtils.LogError(TAG, "unknown reward type:" + type);
-//            }
-//        } catch (JSONException e) {
-//            SoomlaUtils.LogError(TAG, "fromJSONObject JSONException:" + e.getMessage());
-//        }
-//
-//        return reward;
     }
 
     /**
@@ -123,7 +100,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      * @return if the reward was actually given
      */
     public boolean give() {
-        if (!mRepeatable && RewardStorage.isRewardGiven(this)) {
+        if (!mTimeStrategy.approve(RewardStorage.getLastGivenTime(this), RewardStorage.getTimesGiven(this))) {
             SoomlaUtils.LogDebug(TAG, "Reward was already given and is not repeatable. id: " + mID);
             return false;
         }
@@ -183,12 +160,8 @@ public abstract class Reward extends SoomlaEntity<Reward> {
 
     /** Setters and Getters **/
 
-    public boolean isRepeatable() {
-        return mRepeatable;
-    }
-
-    public void setRepeatable(boolean repeatable) {
-        mRepeatable = repeatable;
+    public TimeStrategy getTimeStrategy() {
+        return mTimeStrategy;
     }
 
     /** Private Members **/
@@ -197,6 +170,6 @@ public abstract class Reward extends SoomlaEntity<Reward> {
 
     private static JSONFactory<Reward> sJSONFactory = new JSONFactory<Reward>();
 
-    private boolean mRepeatable = false;
+    protected TimeStrategy mTimeStrategy;
 }
 

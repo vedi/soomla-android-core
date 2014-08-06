@@ -28,17 +28,22 @@ public class JSONConsts {
     public static final String SOOM_ENTITY_ID         = "itemId";
     public static final String SOOM_ASSOCITEMID       = "associatedItemId";
     public static final String SOOM_DESIRED_BALANCE   = "desiredBalance";
-    public static final String SOOM_NAME              = "name";
     public static final String SOOM_CLASSNAME         = "className";
+    public static final String SOOM_TIME_STRATEGY     = "timeStrategy";
 
 
     /** Reward **/
 
     public static final String SOOM_REWARDS           = "rewards";
-    public static final String SOOM_REWARD_REWARDID   = "rewardId";
     public static final String SOOM_REWARD_AMOUNT     = "amount";
     public static final String SOOM_REWARD_ICONURL    = "iconUrl";
-    public static final String SOOM_REWARD_REPEAT     = "repeatable";
+
+
+    /** Time Strategy **/
+
+    public static final String SOOM_TS_KIND	          = "tsKind";
+    public static final String SOOM_TS_START	      = "tsStart";
+    public static final String SOOM_TS_REPEAT	      = "tsRepeat";
 
 }
 

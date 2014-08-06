@@ -16,6 +16,8 @@
 
 package com.soomla.data;
 
+import android.text.TextUtils;
+
 import com.soomla.BusProvider;
 import com.soomla.SoomlaConfig;
 import com.soomla.SoomlaUtils;
@@ -23,6 +25,8 @@ import com.soomla.events.RewardGivenEvent;
 import com.soomla.events.RewardTakenEvent;
 import com.soomla.rewards.Reward;
 import com.soomla.rewards.SequenceReward;
+
+import java.util.Date;
 
 /**
  * A utility class for persisting and querying the state of rewards.
@@ -40,8 +44,12 @@ public class RewardStorage {
         return SoomlaConfig.DB_KEY_PREFIX + "rewards." + rewardId + "." + postfix;
     }
 
-    private static String keyRewardGiven(String rewardId) {
-        return keyRewards(rewardId, "given");
+    private static String keyRewardTimesGiven(String rewardId) {
+        return keyRewards(rewardId, "timesGiven");
+    }
+
+    private static String keyRewardLastGiven(String rewardId) {
+        return keyRewards(rewardId, "lastGiven");
     }
 
     private static String keyRewardIdxSeqGiven(String rewardId) {
@@ -62,28 +70,7 @@ public class RewardStorage {
     }
 
     public static void setRewardStatus(Reward reward, boolean give, boolean notify) {
-        String rewardId = reward.getID();
-        String key = keyRewardGiven(rewardId);
-
-        // todo: also consider take + not owned (with respect to repeatable..)
-        boolean giveAndOwned = give && reward.isOwned() && !reward.isRepeatable();
-        if(giveAndOwned) {
-            notify = false;
-            SoomlaUtils.LogWarning(TAG, "non repeatable reward already given [suppress notify]:" + rewardId);
-        }
-
-        if (give) {
-            KeyValueStorage.setValue(key, "yes");
-
-            if (notify) {
-                BusProvider.getInstance().post(new RewardGivenEvent(reward));
-            }
-        } else {
-            KeyValueStorage.deleteKeyValue(key);
-            if (notify) {
-                BusProvider.getInstance().post(new RewardTakenEvent(reward));
-            }
-        }
+        setRewardTimesGiven(reward, give, notify);
     }
 
     /**
@@ -94,12 +81,7 @@ public class RewardStorage {
      * <code>false</code> otherwise
      */
     public static boolean isRewardGiven(Reward reward) {
-        String rewardId = reward.getID();
-        String key = keyRewardGiven(rewardId);
-
-        String val = KeyValueStorage.getValue(key);
-
-        return val != null;
+        return getTimesGiven(reward) > 0;
     }
 
 
@@ -134,5 +116,51 @@ public class RewardStorage {
         String key = keyRewardIdxSeqGiven(rewardId);
 
         KeyValueStorage.setValue(key, String.valueOf(idx));
+    }
+
+    private static void setRewardTimesGiven(Reward reward, boolean up, boolean notify) {
+        int total = getTimesGiven(reward) + (up ? 1 : -1);
+        String key = keyRewardTimesGiven(reward.getID());
+
+        KeyValueStorage.setValue(key, String.valueOf(total));
+
+        if (up) {
+            key = keyRewardLastGiven(reward.getID());
+            KeyValueStorage.setValue(key, String.valueOf(new Date().getTime()));
+        }
+
+        if (notify) {
+            if (up) {
+                BusProvider.getInstance().post(new RewardGivenEvent(reward));
+            } else {
+                BusProvider.getInstance().post(new RewardTakenEvent(reward));
+            }
+        }
+    }
+
+    public static int getTimesGiven(Reward reward) {
+        String key = keyRewardTimesGiven(reward.getID());
+        String val = KeyValueStorage.getValue(key);
+        if (TextUtils.isEmpty(val)) {
+            return 0;
+        }
+        return Integer.parseInt(val);
+    }
+
+    public static Date getLastGivenTime(Reward reward) {
+        long timeMillis = getLastGivenTimeMillis(reward);
+        Date toReturn = new Date();
+        toReturn.setTime(timeMillis);
+        return toReturn;
+    }
+
+    public static long getLastGivenTimeMillis(Reward reward) {
+        String key = keyRewardLastGiven(reward.getID());
+        String val = KeyValueStorage.getValue(key);
+        if (TextUtils.isEmpty(val)) {
+            return 0;
+        }
+        return Long.parseLong(val);
+
     }
 }
