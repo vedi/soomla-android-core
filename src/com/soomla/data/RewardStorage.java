@@ -149,6 +149,9 @@ public class RewardStorage {
 
     public static Date getLastGivenTime(Reward reward) {
         long timeMillis = getLastGivenTimeMillis(reward);
+        if (timeMillis == 0) {
+            return null;
+        }
         Date toReturn = new Date();
         toReturn.setTime(timeMillis);
         return toReturn;

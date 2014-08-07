@@ -119,7 +119,7 @@ public class TimeStrategy {
         }
 
         if (lastTime == null) {
-            SoomlaUtils.LogError(TAG, "The strategy is related to times and we didn't get a valid lastTime. This means that it's the first time.");
+            SoomlaUtils.LogDebug(TAG, "The strategy is related to times and we didn't get a valid lastTime. This means that it's the first time.");
             return true;
         }
 
