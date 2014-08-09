@@ -20,7 +20,6 @@ import android.text.TextUtils;
 
 import com.soomla.BusProvider;
 import com.soomla.SoomlaConfig;
-import com.soomla.SoomlaUtils;
 import com.soomla.events.RewardGivenEvent;
 import com.soomla.events.RewardTakenEvent;
 import com.soomla.rewards.Reward;

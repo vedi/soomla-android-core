@@ -17,7 +17,6 @@
 package com.soomla.rewards;
 
 import com.soomla.SoomlaUtils;
-import com.soomla.TimeStrategy;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,7 +59,6 @@ public class RandomReward extends Reward {
         }
 
         mRewards = rewards;
-        mTimeStrategy = TimeStrategy.Always();
     }
 
     /**
@@ -89,8 +87,6 @@ public class RandomReward extends Reward {
                 mRewards.add(reward);
             }
         }
-
-        mTimeStrategy = TimeStrategy.Always();
     }
 
     /**

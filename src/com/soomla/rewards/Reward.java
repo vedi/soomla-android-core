@@ -16,9 +16,9 @@
 
 package com.soomla.rewards;
 
+import com.soomla.Schedule;
 import com.soomla.SoomlaEntity;
 import com.soomla.SoomlaUtils;
-import com.soomla.TimeStrategy;
 import com.soomla.data.JSONConsts;
 import com.soomla.data.RewardStorage;
 import com.soomla.util.JSONFactory;
@@ -43,7 +43,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      */
     public Reward(String rewardId, String name) {
         super(name, "", rewardId);
-        mTimeStrategy = TimeStrategy.Once();
+        mSchedule = Schedule.AnyTimeOnce();
     }
 
     /**
@@ -55,11 +55,11 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      */
     public Reward(JSONObject jsonObject) throws JSONException {
         super(jsonObject);
-        JSONObject timeStrategyObj = jsonObject.optJSONObject(JSONConsts.SOOM_TIME_STRATEGY);
-        if (timeStrategyObj != null) {
-            mTimeStrategy = new TimeStrategy(timeStrategyObj);
+        JSONObject scheduleObj = jsonObject.optJSONObject(JSONConsts.SOOM_SCHEDULE);
+        if (scheduleObj != null) {
+            mSchedule = Schedule.AnyTimeOnce();
         } else {
-            mTimeStrategy = null;
+            mSchedule = null;
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
     public JSONObject toJSONObject(){
         JSONObject jsonObject = super.toJSONObject();
         try {
-            jsonObject.put(JSONConsts.SOOM_TIME_STRATEGY, mTimeStrategy.toJSONObject());
+            jsonObject.put(JSONConsts.SOOM_SCHEDULE, mSchedule.toJSONObject());
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }
@@ -100,8 +100,8 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      * @return if the reward was actually given
      */
     public boolean give() {
-        if (!mTimeStrategy.approve(RewardStorage.getLastGivenTime(this), RewardStorage.getTimesGiven(this))) {
-            SoomlaUtils.LogDebug(TAG, "Reward was already given and is not repeatable. id: " + mID);
+        if (!mSchedule.approve(RewardStorage.getTimesGiven(this))) {
+            SoomlaUtils.LogDebug(TAG, "(Give) Reward is not approved by Schedule. id: " + mID);
             return false;
         }
 
@@ -160,8 +160,8 @@ public abstract class Reward extends SoomlaEntity<Reward> {
 
     /** Setters and Getters **/
 
-    public TimeStrategy getTimeStrategy() {
-        return mTimeStrategy;
+    public Schedule getSchedule() {
+        return mSchedule;
     }
 
     /** Private Members **/
@@ -170,6 +170,6 @@ public abstract class Reward extends SoomlaEntity<Reward> {
 
     private static JSONFactory<Reward> sJSONFactory = new JSONFactory<Reward>();
 
-    protected TimeStrategy mTimeStrategy;
+    protected Schedule mSchedule;
 }
 

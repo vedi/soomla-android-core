@@ -18,7 +18,6 @@ package com.soomla.rewards;
 
 
 import com.soomla.SoomlaUtils;
-import com.soomla.TimeStrategy;
 import com.soomla.data.RewardStorage;
 
 import org.json.JSONArray;
@@ -55,7 +54,6 @@ public class SequenceReward extends Reward {
         }
 
         mRewards = rewards;
-        mTimeStrategy = TimeStrategy.Always();
     }
 
     /**
@@ -82,8 +80,6 @@ public class SequenceReward extends Reward {
                 mRewards.add(reward);
             }
         }
-
-        mTimeStrategy = TimeStrategy.Always();
     }
 
     /**

@@ -29,7 +29,7 @@ public class JSONConsts {
     public static final String SOOM_ASSOCITEMID       = "associatedItemId";
     public static final String SOOM_DESIRED_BALANCE   = "desiredBalance";
     public static final String SOOM_CLASSNAME         = "className";
-    public static final String SOOM_TIME_STRATEGY     = "timeStrategy";
+    public static final String SOOM_SCHEDULE		   = "schedule";
 
 
     /** Reward **/
@@ -39,11 +39,12 @@ public class JSONConsts {
     public static final String SOOM_REWARD_ICONURL    = "iconUrl";
 
 
-    /** Time Strategy **/
-
-    public static final String SOOM_TS_KIND	          = "tsKind";
-    public static final String SOOM_TS_START	      = "tsStart";
-    public static final String SOOM_TS_REPEAT	      = "tsRepeat";
+    /** Schedule **/
+    public static final String SOOM_SCHE_REC	       = "schedRecurrence";
+    public static final String SOOM_SCHE_RANGES       = "schedTimeRanges";
+    public static final String SOOM_SCHE_RANGE_START  = "schedTimeRangeStart";
+    public static final String SOOM_SCHE_RANGE_END	   = "schedTimeRangeEnd";
+    public static final String SOOM_SCHE_APPROVALS    = "schedApprovals";
 
 }
 
