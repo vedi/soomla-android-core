@@ -27,6 +27,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 
+/**
+ *
+ * This is the parent class of all entities in the application.
+ * Almost every entity in your virtual economy will be an entity. There
+ * are many types of entities - each one of the various types extends
+ * <code>SoomlaEntity</code> and adds its own behavior on top of it.
+ */
 public abstract class SoomlaEntity<T> {
 
     /**
