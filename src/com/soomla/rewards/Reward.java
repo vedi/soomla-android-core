@@ -100,7 +100,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      * @return if the reward was actually given
      */
     public boolean give() {
-        if (!mSchedule.approve(RewardStorage.getTimesGiven(this))) {
+        if (!canGive()) {
             SoomlaUtils.LogDebug(TAG, "(Give) Reward is not approved by Schedule. id: " + mID);
             return false;
         }
@@ -130,6 +130,15 @@ public abstract class Reward extends SoomlaEntity<Reward> {
         }
 
         return false;
+    }
+
+    /**
+     * Checks if this reward can be given
+     *
+     * @return <code>true</code> if can be given, <code>false</code> otherwise
+     */
+    public boolean canGive() {
+        return mSchedule.approve(RewardStorage.getTimesGiven(this));
     }
 
     /**

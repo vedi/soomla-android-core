@@ -51,5 +51,5 @@ SOOMLA, Elsewhere ...
 
 License
 ---
-Apache License. Copyright (c) 2012-2014 SOOMLA. http://project.soom.la
+Apache License. Copyright (c) 2012-2014 SOOMLA. http://soom.la
 + http://opensource.org/licenses/Apache-2.0
