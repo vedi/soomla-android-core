@@ -69,7 +69,7 @@ public class RewardStorage {
     }
 
     public static void setRewardStatus(Reward reward, boolean give, boolean notify) {
-        setRewardTimesGiven(reward, give, notify);
+        setTimesGiven(reward, give, notify);
     }
 
     /**
@@ -117,7 +117,7 @@ public class RewardStorage {
         KeyValueStorage.setValue(key, String.valueOf(idx));
     }
 
-    private static void setRewardTimesGiven(Reward reward, boolean up, boolean notify) {
+    private static void setTimesGiven(Reward reward, boolean up, boolean notify) {
         int total = getTimesGiven(reward) + (up ? 1 : -1);
         String key = keyRewardTimesGiven(reward.getID());
 
