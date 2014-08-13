@@ -116,9 +116,21 @@ public class RandomReward extends Reward {
      */
     @Override
     protected boolean giveInner() {
+        List<Reward> canBeGivenRewards = new ArrayList<Reward>();
+        for (Reward reward : this.mRewards) {
+            if (reward.canGive()) {
+                canBeGivenRewards.add(reward);
+            }
+        }
+
+        if (canBeGivenRewards.isEmpty()) {
+            SoomlaUtils.LogDebug(TAG, "No more rewards to give in this Random Reward: " + this.mID);
+            return false;
+        }
+
         Random rand = new Random();
-        int n = rand.nextInt(mRewards.size());
-        final Reward randomReward = mRewards.get(n);
+        int n = rand.nextInt(canBeGivenRewards.size());
+        final Reward randomReward = canBeGivenRewards.get(n);
         randomReward.give();
         mLastGivenReward = randomReward;
 
