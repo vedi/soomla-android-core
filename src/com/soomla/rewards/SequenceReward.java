@@ -40,13 +40,13 @@ public class SequenceReward extends Reward {
     /**
      * Constructor
      *
-     * @param rewardId see parent
+     * @param id see parent
      * @param name see parent
      * @param rewards the list of rewards in the sequence
      *                this must not be null and contain at least 1 item
      */
-    public SequenceReward(String rewardId, String name, List<Reward> rewards) {
-        super(rewardId, name);
+    public SequenceReward(String id, String name, List<Reward> rewards) {
+        super(id, name);
 
         if (rewards == null || rewards.isEmpty()) {
             final String error = "this reward doesn't make sense without items";

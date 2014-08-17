@@ -45,13 +45,13 @@ public class RandomReward extends Reward {
     /**
      * Constructor
      *
-     * @param rewardId see parent
+     * @param id see parent
      * @param name see parent
      * @param rewards a list of rewards from which to choose the reward randomly
      *                this must not be null and contain at least 1 item
      */
-    public RandomReward(String rewardId, String name, List<Reward> rewards) {
-        super(rewardId, name);
+    public RandomReward(String id, String name, List<Reward> rewards) {
+        super(id, name);
 
         if (rewards == null || rewards.isEmpty()) {
             final String error = "this reward doesn't make sense without items";

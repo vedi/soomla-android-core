@@ -38,11 +38,11 @@ public abstract class Reward extends SoomlaEntity<Reward> {
     /**
      * Constructor
      *
-     * @param rewardId the reward's ID (unique id to distinguish between rewards).
+     * @param id the reward's ID (unique id to distinguish between rewards).
      * @param name the reward's name.
      */
-    public Reward(String rewardId, String name) {
-        super(name, "", rewardId);
+    public Reward(String id, String name) {
+        super(id, name, "");
         mSchedule = Schedule.AnyTimeOnce();
     }
 
