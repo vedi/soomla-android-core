@@ -39,14 +39,14 @@ public abstract class SoomlaEntity<T> {
     /**
      * Constructor.
      *
-     * @param id the ID of the entity
      * @param mName the name of the entity
      * @param mDescription the description of the entity
+     * @param mID the ID of the entity
      */
-    public SoomlaEntity(String id, String mName, String mDescription) {
+    public SoomlaEntity(String mName, String mDescription, String mID) {
         this.mName = mName;
         this.mDescription = mDescription;
-        this.mID = id.trim();
+        this.mID = mID.trim();
     }
 
     /**

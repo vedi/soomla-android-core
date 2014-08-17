@@ -33,22 +33,22 @@ public class BadgeReward extends Reward {
     /**
      * Constructor
      *
-     * @param id see parent
+     * @param rewardId see parent
      * @param name see parent
      */
-    public BadgeReward(String id, String name) {
-        super(id, name);
+    public BadgeReward(String rewardId, String name) {
+        super(rewardId, name);
     }
 
     /**
      * Constructor
      *
-     * @param id see parent
+     * @param rewardId see parent
      * @param name see parent
      * @param iconUrl the URL of the badge's icon
      */
-    public BadgeReward(String id, String name, String iconUrl) {
-        super(id, name);
+    public BadgeReward(String rewardId, String name, String iconUrl) {
+        super(rewardId, name);
         mIconUrl = iconUrl;
     }
 
