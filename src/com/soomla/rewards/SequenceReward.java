@@ -87,6 +87,7 @@ public class SequenceReward extends Reward {
      *
      * @return A <code>JSONObject</code> representation of the current <code>SequenceReward</code>.
      */
+    @Override
     public JSONObject toJSONObject(){
         JSONObject jsonObject = super.toJSONObject();
         try {

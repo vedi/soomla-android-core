@@ -68,6 +68,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      *
      * @return A <code>JSONObject</code> representation of the current <code>Reward</code>.
      */
+    @Override
     public JSONObject toJSONObject(){
         JSONObject jsonObject = super.toJSONObject();
         try {

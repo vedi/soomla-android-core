@@ -94,6 +94,7 @@ public class RandomReward extends Reward {
      *
      * @return A <code>JSONObject</code> representation of the current <code>RandomReward</code>.
      */
+    @Override
     public JSONObject toJSONObject(){
         JSONObject jsonObject = super.toJSONObject();
         try {

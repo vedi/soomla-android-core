@@ -73,6 +73,7 @@ public class BadgeReward extends Reward {
      *
      * @return A <code>JSONObject</code> representation of the current <code>BadgeReward</code>.
      */
+    @Override
     public JSONObject toJSONObject(){
         JSONObject jsonObject = super.toJSONObject();
         try {
