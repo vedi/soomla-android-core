@@ -79,8 +79,9 @@ public class Schedule {
 
         mActivationLimit = jsonSched.getInt(JSONConsts.SOOM_SCHE_APPROVALS);
 
-        mTimeRanges = new ArrayList<DateTimeRange>();
+        mTimeRanges = null;
         if (jsonSched.has(JSONConsts.SOOM_SCHE_RANGES)) {
+            mTimeRanges = new ArrayList<DateTimeRange>();
             JSONArray rangesObjs = jsonSched.getJSONArray(JSONConsts.SOOM_SCHE_RANGES);
             for(int i=0; i<rangesObjs.length(); i++) {
                 long tmpTimeMillis = rangesObjs.getJSONObject(i).getLong(JSONConsts.SOOM_SCHE_RANGE_START);
@@ -101,16 +102,18 @@ public class Schedule {
                 jsonObject.put(JSONConsts.SOOM_SCHE_REC, mRequiredRecurrence.ordinal());
             }
 
-            JSONArray rangesObjs = new JSONArray();
-            for(DateTimeRange range : mTimeRanges) {
-                long startMillis = range.Start.getTime();
-                long endMillis = range.End.getTime();
-                JSONObject rangeObj = new JSONObject();
-                rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_START, startMillis);
-                rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_END, endMillis);
-                rangesObjs.put(rangeObj);
+            if (mTimeRanges != null) {
+                JSONArray rangesObjs = new JSONArray();
+                for(DateTimeRange range : mTimeRanges) {
+                    long startMillis = range.Start.getTime();
+                    long endMillis = range.End.getTime();
+                    JSONObject rangeObj = new JSONObject();
+                    rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_START, startMillis);
+                    rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_END, endMillis);
+                    rangesObjs.put(rangeObj);
+                }
+                jsonObject.put(JSONConsts.SOOM_SCHE_RANGES, rangesObjs);
             }
-            jsonObject.put(JSONConsts.SOOM_SCHE_RANGES, rangesObjs);
 
             jsonObject.put(JSONConsts.SOOM_SCHE_APPROVALS, mActivationLimit);
         } catch (JSONException e) {
