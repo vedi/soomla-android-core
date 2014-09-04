@@ -170,7 +170,7 @@ public class KeyValueStorage {
     public static void purge() {
         SoomlaUtils.LogDebug(TAG, "purging database");
 
-        getDatabase().purgeDatabase(SoomlaApp.getAppContext());
+        getDatabase().purgeDatabaseEntries(SoomlaApp.getAppContext());
     }
 
     /**

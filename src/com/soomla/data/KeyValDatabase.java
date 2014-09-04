@@ -63,6 +63,15 @@ public class KeyValDatabase {
     }
 
     /**
+     * Deletes the database contents
+     *
+     * @param context global information about the application environment
+     */
+    public void purgeDatabaseEntries(Context context) {
+        mStoreDB.delete(KEYVAL_TABLE_NAME, null, null);
+    }
+
+    /**
      * Sets the given value to the given key.
      *
      * @param key the key of the key-val pair
