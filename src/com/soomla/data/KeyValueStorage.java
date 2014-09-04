@@ -162,6 +162,18 @@ public class KeyValueStorage {
     }
 
     /**
+     * Purges the entire storage
+     *
+     * NOTE: Use this method with care, it will erase all user data in storage
+     * This method is mainly used for testing.
+     */
+    public static void purge() {
+        SoomlaUtils.LogDebug(TAG, "purging database");
+
+        getDatabase().purgeDatabase(SoomlaApp.getAppContext());
+    }
+
+    /**
      * Retrieves the key-val database.
      *
      * @return key-val database
