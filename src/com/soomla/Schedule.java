@@ -54,7 +54,7 @@ public class Schedule {
 
     public Schedule(final Date startTime, final Date endTime, Recurrence recurrence, int activationLimit)
     {
-        List<DateTimeRange> ranges = new ArrayList<DateTimeRange>() {{ new DateTimeRange(startTime, endTime); }};
+        List<DateTimeRange> ranges = new ArrayList<DateTimeRange>() {{ add(new DateTimeRange(startTime, endTime)); }};
         mTimeRanges = ranges;
 
         mRequiredRecurrence = recurrence;
