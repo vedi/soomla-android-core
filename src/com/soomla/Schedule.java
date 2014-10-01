@@ -108,6 +108,7 @@ public class Schedule {
                     long startMillis = range.Start.getTime();
                     long endMillis = range.End.getTime();
                     JSONObject rangeObj = new JSONObject();
+                    rangeObj.put(JSONConsts.SOOM_CLASSNAME, SoomlaUtils.getClassName(range));
                     rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_START, startMillis);
                     rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_END, endMillis);
                     rangesObjs.put(rangeObj);
