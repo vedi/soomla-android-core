@@ -54,7 +54,7 @@ public class Schedule {
 
     public Schedule(final Date startTime, final Date endTime, Recurrence recurrence, int activationLimit)
     {
-        List<DateTimeRange> ranges = new ArrayList<DateTimeRange>() {{ new DateTimeRange(startTime, endTime); }};
+        List<DateTimeRange> ranges = new ArrayList<DateTimeRange>() {{ add(new DateTimeRange(startTime, endTime)); }};
         mTimeRanges = ranges;
 
         mRequiredRecurrence = recurrence;
@@ -108,6 +108,7 @@ public class Schedule {
                     long startMillis = range.Start.getTime();
                     long endMillis = range.End.getTime();
                     JSONObject rangeObj = new JSONObject();
+                    rangeObj.put(JSONConsts.SOOM_CLASSNAME, SoomlaUtils.getClassName(range));
                     rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_START, startMillis);
                     rangeObj.put(JSONConsts.SOOM_SCHE_RANGE_END, endMillis);
                     rangesObjs.put(rangeObj);
@@ -116,6 +117,8 @@ public class Schedule {
             }
 
             jsonObject.put(JSONConsts.SOOM_SCHE_APPROVALS, mActivationLimit);
+
+            jsonObject.put(JSONConsts.SOOM_CLASSNAME, SoomlaUtils.getClassName(this));
         } catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "An error occurred while generating JSON object.");
         }

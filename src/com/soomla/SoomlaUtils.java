@@ -19,6 +19,8 @@ package com.soomla;
 import android.provider.Settings;
 import android.util.Log;
 
+import java.util.Objects;
+
 /**
  * This class provides Log functions that output debug, warning, or error messages.
  */
@@ -73,6 +75,16 @@ public class SoomlaUtils {
         }
 
         return androidId;
+    }
+
+    /**
+     * Retrieves the class name (to be used for serialization/deserialization
+     * for the passed instance
+     * @param target The instance to get the class name for
+     * @return the target's class name
+     */
+    public static String getClassName(Object target) {
+        return target.getClass().getSimpleName();
     }
 
 
