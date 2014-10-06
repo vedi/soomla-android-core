@@ -87,7 +87,7 @@ public class KeyValueStorage {
      * @param key key according to which val will be retrieved
      * @return value of key-val pair
      */
-    public String getNonEncryptedKeyValue(String key) {
+    public static String getNonEncryptedKeyValue(String key) {
         SoomlaUtils.LogDebug(TAG, "trying to fetch a value for key: " + key);
 
         String val = getDatabase().getKeyVal(key);
