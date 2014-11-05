@@ -21,7 +21,7 @@ import com.soomla.rewards.Reward;
 /**
  *  This event is fired when a <code>Reward</code> has been taken.
  */
-public class RewardTakenEvent {
+public class RewardTakenEvent extends SoomlaEvent {
 
     /** read-only Properties **/
 
@@ -29,9 +29,15 @@ public class RewardTakenEvent {
 
     /**
      * Constructor
-     * @param reward which was taken
+     *
+     * @param reward the reward that was taken
      */
     public RewardTakenEvent(Reward reward) {
+        this(reward, null);
+    }
+
+    public RewardTakenEvent(Reward reward, Object sender) {
+        super(sender);
         Reward = reward;
     }
 }

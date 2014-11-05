@@ -16,28 +16,11 @@
 
 package com.soomla.events;
 
-import com.soomla.rewards.Reward;
+public class SoomlaEvent {
+    public final Object Sender;
 
-/**
- * This event is fired when a <code>Reward</code> has been given.
- */
-public class RewardGivenEvent extends SoomlaEvent {
-
-    /** read-only Properties **/
-
-    public final Reward Reward;
-
-    /**
-     * Constructor
-     *
-     * @param reward the reward that was given
-     */
-    public RewardGivenEvent(Reward reward) {
-        this(reward, null);
-    }
-
-    public RewardGivenEvent(Reward reward, Object sender) {
-        super(sender);
-        Reward = reward;
+//    public SoomlaEvent() {}
+    public SoomlaEvent(Object sender) {
+        Sender = sender;
     }
 }

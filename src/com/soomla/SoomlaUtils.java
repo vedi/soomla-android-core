@@ -19,8 +19,6 @@ package com.soomla;
 import android.provider.Settings;
 import android.util.Log;
 
-import java.util.Objects;
-
 /**
  * This class provides Log functions that output debug, warning, or error messages.
  */

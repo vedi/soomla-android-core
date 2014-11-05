@@ -16,28 +16,33 @@
 
 package com.soomla.events;
 
-import com.soomla.rewards.Reward;
+import java.util.HashMap;
 
 /**
- * This event is fired when a <code>Reward</code> has been given.
+ * This event is fired on custom occasions. Mainly used internally for plugins and other purposes.
  */
-public class RewardGivenEvent extends SoomlaEvent {
+public class CustomEvent extends SoomlaEvent {
 
-    /** read-only Properties **/
 
-    public final Reward Reward;
 
-    /**
-     * Constructor
-     *
-     * @param reward the reward that was given
-     */
-    public RewardGivenEvent(Reward reward) {
-        this(reward, null);
+    public CustomEvent(String name, HashMap<String, String> extra) {
+        this(name, extra, null);
     }
 
-    public RewardGivenEvent(Reward reward, Object sender) {
+    public CustomEvent(String name, HashMap<String, String> extra, Object sender) {
         super(sender);
-        Reward = reward;
+        mName = name;
+        mExtra = extra;
     }
+
+    public String getName() {
+        return mName;
+    }
+
+    public HashMap<String, String> getExtra() {
+        return mExtra;
+    }
+
+    private String mName;
+    private HashMap<String, String> mExtra;
 }
