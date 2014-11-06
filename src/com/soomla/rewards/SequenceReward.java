@@ -109,7 +109,7 @@ public class SequenceReward extends Reward {
      * @return the last given reward
      */
     public Reward getLastGivenReward() {
-        int idx = RewardStorage.getLastSeqIdxGiven(this);
+        int idx = RewardStorage.getLastSeqIdxGiven(this.getID());
         if (idx < 0) {
             return null;
         }
@@ -122,7 +122,7 @@ public class SequenceReward extends Reward {
      * @return <code>true</code> if there are more rewards, <code>false</code> otherwise
      */
     public boolean hasMoreToGive() {
-        return RewardStorage.getLastSeqIdxGiven(this) < mRewards.size() ;
+        return RewardStorage.getLastSeqIdxGiven(this.getID()) < mRewards.size() ;
     }
 
     /**
@@ -136,7 +136,7 @@ public class SequenceReward extends Reward {
     public boolean forceNextRewardToGive(Reward reward) {
         for (int i = 0; i < mRewards.size(); i++) {
             if (mRewards.get(i).getID().equals(reward.getID())) {
-                RewardStorage.setLastSeqIdxGiven(this, i - 1);
+                RewardStorage.setLastSeqIdxGiven(this.getID(), i - 1);
                 return true;
             }
         }
@@ -152,21 +152,21 @@ public class SequenceReward extends Reward {
      */
     @Override
     protected boolean giveInner() {
-        int idx = RewardStorage.getLastSeqIdxGiven(this);
+        int idx = RewardStorage.getLastSeqIdxGiven(this.getID());
         if (idx >= mRewards.size()) {
             return false; // all rewards in the sequence were given
         }
-        RewardStorage.setLastSeqIdxGiven(this, ++idx);
+        RewardStorage.setLastSeqIdxGiven(this.getID(), ++idx);
         return true;
     }
 
     @Override
     protected boolean takeInner() {
-        int idx = RewardStorage.getLastSeqIdxGiven(this);
+        int idx = RewardStorage.getLastSeqIdxGiven(this.getID());
         if (idx <= 0) {
             return false; // all rewards in the sequence were taken
         }
-        RewardStorage.setLastSeqIdxGiven(this, --idx);
+        RewardStorage.setLastSeqIdxGiven(this.getID(), --idx);
         return true;
     }
 

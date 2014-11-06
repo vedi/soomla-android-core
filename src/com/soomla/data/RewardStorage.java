@@ -61,26 +61,26 @@ public class RewardStorage {
     /**
      * Sets the reward status of the given reward\
      *
-     * @param reward the reward to set status
+     * @param rewardId the reward to set status
      * @param give <code>true</code>
      */
-    public static void setRewardStatus(Reward reward, boolean give) {
-        setRewardStatus(reward, give, true);
+    public static void setRewardStatus(String rewardId, boolean give) {
+        setRewardStatus(rewardId, give, true);
     }
 
-    public static void setRewardStatus(Reward reward, boolean give, boolean notify) {
-        setTimesGiven(reward, give, notify);
+    public static void setRewardStatus(String rewardId, boolean give, boolean notify) {
+        setTimesGiven(rewardId, give, notify);
     }
 
     /**
      * Checks whether the given reward was given.
      *
-     * @param reward the reward to check
+     * @param rewardId the reward to check
      * @return <code>true</code> if the reward was already given,
      * <code>false</code> otherwise
      */
-    public static boolean isRewardGiven(Reward reward) {
-        return getTimesGiven(reward) > 0;
+    public static boolean isRewardGiven(String rewardId) {
+        return getTimesGiven(rewardId) > 0;
     }
 
 
@@ -89,11 +89,10 @@ public class RewardStorage {
     /**
      * Retrieves the index of the last reward given in a sequence of rewards.
      *
-     * @param sequenceReward the reward to check
+     * @param rewardId the SequenceReward to check
      * @return the index of the reward in the sequence
      */
-    public static int getLastSeqIdxGiven(SequenceReward sequenceReward) {
-        String rewardId = sequenceReward.getID();
+    public static int getLastSeqIdxGiven(String rewardId) {
         String key = keyRewardIdxSeqGiven(rewardId);
 
         String val = KeyValueStorage.getValue(key);
@@ -107,38 +106,17 @@ public class RewardStorage {
     /**
      * Sets the index of the last reward given in a sequence of rewards.
      *
-     * @param sequenceReward the reward who's index is to be set
+     * @param rewardId the SequenceReward who's index is to be set
      * @param idx the index to set
      */
-    public static void setLastSeqIdxGiven(SequenceReward sequenceReward, int idx) {
-        String rewardId = sequenceReward.getID();
+    public static void setLastSeqIdxGiven(String rewardId, int idx) {
         String key = keyRewardIdxSeqGiven(rewardId);
 
         KeyValueStorage.setValue(key, String.valueOf(idx));
     }
 
-    private static void setTimesGiven(Reward reward, boolean up, boolean notify) {
-        int total = getTimesGiven(reward) + (up ? 1 : -1);
-        String key = keyRewardTimesGiven(reward.getID());
-
-        KeyValueStorage.setValue(key, String.valueOf(total));
-
-        if (up) {
-            key = keyRewardLastGiven(reward.getID());
-            KeyValueStorage.setValue(key, String.valueOf(new Date().getTime()));
-        }
-
-        if (notify) {
-            if (up) {
-                BusProvider.getInstance().post(new RewardGivenEvent(reward));
-            } else {
-                BusProvider.getInstance().post(new RewardTakenEvent(reward));
-            }
-        }
-    }
-
-    public static int getTimesGiven(Reward reward) {
-        String key = keyRewardTimesGiven(reward.getID());
+    public static int getTimesGiven(String rewardId) {
+        String key = keyRewardTimesGiven(rewardId);
         String val = KeyValueStorage.getValue(key);
         if (TextUtils.isEmpty(val)) {
             return 0;
@@ -146,8 +124,8 @@ public class RewardStorage {
         return Integer.parseInt(val);
     }
 
-    public static Date getLastGivenTime(Reward reward) {
-        long timeMillis = getLastGivenTimeMillis(reward);
+    public static Date getLastGivenTime(String rewardId) {
+        long timeMillis = getLastGivenTimeMillis(rewardId);
         if (timeMillis == 0) {
             return null;
         }
@@ -156,13 +134,33 @@ public class RewardStorage {
         return toReturn;
     }
 
-    public static long getLastGivenTimeMillis(Reward reward) {
-        String key = keyRewardLastGiven(reward.getID());
+    public static long getLastGivenTimeMillis(String rewardId) {
+        String key = keyRewardLastGiven(rewardId);
         String val = KeyValueStorage.getValue(key);
         if (TextUtils.isEmpty(val)) {
             return 0;
         }
         return Long.parseLong(val);
 
+    }
+
+    private static void setTimesGiven(String rewardId, boolean up, boolean notify) {
+        int total = getTimesGiven(rewardId) + (up ? 1 : -1);
+        String key = keyRewardTimesGiven(rewardId);
+
+        KeyValueStorage.setValue(key, String.valueOf(total));
+
+        if (up) {
+            key = keyRewardLastGiven(rewardId);
+            KeyValueStorage.setValue(key, String.valueOf(new Date().getTime()));
+        }
+
+        if (notify) {
+            if (up) {
+                BusProvider.getInstance().post(new RewardGivenEvent(rewardId));
+            } else {
+                BusProvider.getInstance().post(new RewardTakenEvent(rewardId));
+            }
+        }
     }
 }

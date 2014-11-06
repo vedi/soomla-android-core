@@ -107,7 +107,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
         }
 
         if (giveInner()) {
-            RewardStorage.setRewardStatus(this, true);
+            RewardStorage.setRewardStatus(this.getID(), true);
             return true;
         }
 
@@ -120,13 +120,13 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      * indicating that his \ her previously earned reward should be recalled.
      */
     public boolean take() {
-        if (!RewardStorage.isRewardGiven(this)) {
+        if (!RewardStorage.isRewardGiven(this.getID())) {
             SoomlaUtils.LogDebug(TAG, "Reward not given. id: " + mID);
             return false;
         }
 
         if (takeInner()) {
-            RewardStorage.setRewardStatus(this, false);
+            RewardStorage.setRewardStatus(this.getID(), false);
             return true;
         }
 
@@ -139,7 +139,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      * @return <code>true</code> if can be given, <code>false</code> otherwise
      */
     public boolean canGive() {
-        return mSchedule.approve(RewardStorage.getTimesGiven(this));
+        return mSchedule.approve(RewardStorage.getTimesGiven(this.getID()));
     }
 
     /**
@@ -148,7 +148,7 @@ public abstract class Reward extends SoomlaEntity<Reward> {
      * @return <code>true</code> if owned, <code>false</code> otherwise
      */
     public boolean isOwned() {
-        return RewardStorage.isRewardGiven(this);
+        return RewardStorage.isRewardGiven(this.getID());
     }
 
     /**

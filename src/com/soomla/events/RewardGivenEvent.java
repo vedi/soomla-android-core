@@ -16,8 +16,6 @@
 
 package com.soomla.events;
 
-import com.soomla.rewards.Reward;
-
 /**
  * This event is fired when a <code>Reward</code> has been given.
  */
@@ -25,19 +23,19 @@ public class RewardGivenEvent extends SoomlaEvent {
 
     /** read-only Properties **/
 
-    public final Reward Reward;
+    public final String RewardId;
 
     /**
      * Constructor
      *
-     * @param reward the reward that was given
+     * @param rewardId the reward that was given
      */
-    public RewardGivenEvent(Reward reward) {
-        this(reward, null);
+    public RewardGivenEvent(String rewardId) {
+        this(rewardId, null);
     }
 
-    public RewardGivenEvent(Reward reward, Object sender) {
+    public RewardGivenEvent(String rewardId, Object sender) {
         super(sender);
-        Reward = reward;
+        RewardId = rewardId;
     }
 }
