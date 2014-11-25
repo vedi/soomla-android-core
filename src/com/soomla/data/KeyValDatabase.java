@@ -146,6 +146,54 @@ public class KeyValDatabase {
         return ret;
     }
 
+    public synchronized String getQueryOne(String query) {
+        query = query.replace('*', '%');
+        Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
+                        + " LIKE '?'",
+                new String[]{query}, null, null, null, "1");
+
+        if(cursor != null) {
+            boolean moved = cursor.moveToFirst();
+            if (moved) {
+                int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
+                String ret = cursor.getString(valColIdx);
+
+                cursor.close();
+
+                return ret;
+            }
+        }
+//        String ret = null;
+//        while (cursor != null && cursor.moveToNext()) {
+//            try {
+//                int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
+//                ret = cursor.getString(valColIdx);
+//            } catch (IllegalArgumentException exx) {
+//            }
+//        }
+
+        return null;
+
+
+    }
+
+    public synchronized int getQueryCount(String query) {
+        query = query.replace('*', '%');
+        Cursor cursor = mStoreDB.rawQuery("SELECT COUNT(" + KEYVAL_COLUMN_VAL + ") from " +
+                        KEYVAL_TABLE_NAME + " WHERE " + KEYVAL_COLUMN_KEY + " LIKE '" + query +"'", null);
+        if(cursor != null) {
+            boolean moved = cursor.moveToFirst();
+            if (moved) {
+                int count = cursor.getInt(0);
+                cursor.close();
+
+                return count;
+            }
+        }
+
+        return 0;
+    }
+
     /**
      * DataBase Helper class
      */

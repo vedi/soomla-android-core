@@ -134,6 +134,42 @@ public class KeyValueStorage {
     }
 
     /**
+     * Retrieves one key-val according to given query.
+     *
+     * @param query query that determines what key-val will be returned
+     * @return string of key-val returned
+     */
+    public static String getOneForNonEncryptedQuery(String query) {
+        SoomlaUtils.LogDebug(TAG, "trying to fetch one for query: " + query);
+
+        String val = getDatabase().getQueryOne(query);
+        if (val != null && !TextUtils.isEmpty(val)) {
+            try {
+                val = getAESObfuscator().unobfuscateToString(val);
+                return val;
+            } catch (AESObfuscator.ValidationException e) {
+                SoomlaUtils.LogError(TAG, e.getMessage());
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieves the number key-vals according to given query.
+     *
+     * @param query query that determines what number of key-vals
+     * @return number of key-vals according the the given query
+     */
+    public static int getCountForNonEncryptedQuery(String query) {
+        SoomlaUtils.LogDebug(TAG, "trying to fetch count for query: " + query);
+
+        return getDatabase().getQueryCount(query);
+    }
+
+
+
+    /**
      * Sets the given value to the given key.
      *
      * @param key is the key in the key-val pair.
