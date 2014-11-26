@@ -149,8 +149,8 @@ public class KeyValDatabase {
     public synchronized String getQueryOne(String query) {
         query = query.replace('*', '%');
         Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
-                        + " LIKE '?'",
-                new String[]{query}, null, null, null, "1");
+                        + " LIKE '" + query + "'",
+                null, null, null, null, "1");
 
         if(cursor != null) {
             boolean moved = cursor.moveToFirst();
