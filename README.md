@@ -25,8 +25,8 @@ SOOMLA modules internally use these features, though we encourage you to use the
 
 ####Pre baked jars:
 
-[square-otto-1.3.2](http://library.soom.la/fetch/square-otto/1.3.2?cf=github)  
-[soomla-android-core 1.0.0](http://library.soom.la/fetch/android-core/1.0.0?cf=github)
+[square-otto-1.3.2](http://library.soom.la/fetch/square-otto/1.3.2?cf=github-core)  
+[soomla-android-core 1.0.0](http://library.soom.la/fetch/android-core/1.0.0?cf=github-core)
 
 Our way of saying "Thanks !"
 ---
