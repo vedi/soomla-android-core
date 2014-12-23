@@ -24,7 +24,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.soomla.SoomlaConfig;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The KeyValDatabase provides a basic key-value store above SQLite.
@@ -192,6 +194,26 @@ public class KeyValDatabase {
         }
 
         return 0;
+    }
+
+    public synchronized List<String> getAllKeys() {
+        Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, new String[] { KEYVAL_COLUMN_KEY },
+                null, null, null, null, null);
+
+        List<String> ret = new ArrayList<String>();
+        while (cursor != null && cursor.moveToNext()) {
+            try {
+                int keyColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_KEY);
+                ret.add(cursor.getString(keyColIdx));
+            } catch (IllegalArgumentException exx) {
+            }
+        }
+
+        if(cursor != null) {
+            cursor.close();
+        }
+
+        return ret;
     }
 
     /**

@@ -20,12 +20,19 @@ import android.text.TextUtils;
 
 import com.soomla.BusProvider;
 import com.soomla.SoomlaConfig;
+import com.soomla.SoomlaUtils;
 import com.soomla.events.RewardGivenEvent;
 import com.soomla.events.RewardTakenEvent;
 import com.soomla.rewards.Reward;
 import com.soomla.rewards.SequenceReward;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A utility class for persisting and querying the state of rewards.
@@ -144,6 +151,11 @@ public class RewardStorage {
 
     }
 
+    public static void setLastGivenTimeMillis(String rewardId, long lastGiven) {
+        String key = keyRewardLastGiven(rewardId);
+        KeyValueStorage.setValue(key, String.valueOf(lastGiven));
+    }
+
     private static void setTimesGiven(String rewardId, boolean up, boolean notify) {
         int total = getTimesGiven(rewardId) + (up ? 1 : -1);
         String key = keyRewardTimesGiven(rewardId);
@@ -162,5 +174,87 @@ public class RewardStorage {
                 BusProvider.getInstance().post(new RewardTakenEvent(rewardId));
             }
         }
+    }
+
+    public static void resetTimesGiven(String rewardId, int timesGiven) {
+        String key = keyRewardTimesGiven(rewardId);
+        KeyValueStorage.setValue(key, String.valueOf(timesGiven));
+    }
+
+    public static JSONObject getRewardsState() {
+        List<String> rewardIds = getRewardIds();
+        JSONObject rewardsStateJSON = new JSONObject();
+
+        for (String rewardId : rewardIds) {
+            JSONObject rewardValuesJSON = new JSONObject();
+            try {
+                int timesGiven = RewardStorage.getTimesGiven(rewardId);
+                rewardValuesJSON.put("timesGiven", timesGiven);
+
+                long lastGiven = RewardStorage.getLastGivenTimeMillis(rewardId);
+                rewardValuesJSON.put("lastGiven", lastGiven);
+
+                //TODO: add LastSeqIdxGiven when sequence reward is fixed
+
+                rewardsStateJSON.put(rewardId, rewardValuesJSON);
+            }
+            catch (JSONException e) {
+                SoomlaUtils.LogDebug(TAG, "Unable to set reward " + rewardId + " state. error: " + e.getLocalizedMessage());
+            }
+        }
+
+        return rewardsStateJSON;
+    }
+
+    public static boolean resetRewardsState(JSONObject state) {
+        if (state == null) {
+            return false;
+        }
+
+        try {
+            Iterator keysIter = state.keys();
+            while (keysIter.hasNext()) {
+                String rewardId = (String) keysIter.next();
+                JSONObject itemValuesJSON = state.getJSONObject(rewardId);
+
+                if (itemValuesJSON.has("timesGiven")) {
+                    int timesGiven = itemValuesJSON.getInt("timesGiven");
+                    resetTimesGiven(rewardId, timesGiven);
+                }
+
+                if (itemValuesJSON.has("lastGiven")) {
+                    long lastGiven = itemValuesJSON.getLong("lastGiven");
+                    setLastGivenTimeMillis(rewardId, lastGiven);
+                }
+            }
+        }
+        catch (JSONException e) {
+            SoomlaUtils.LogError(TAG, "Unable to set state for rewards. error: " + e.getLocalizedMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    private static List<String> getRewardIds() {
+        List<String> kvKeys = KeyValueStorage.getAllKeysUnencrypted();
+        List<String> rewardIds = new ArrayList<String>();
+        if (kvKeys == null) {
+            return rewardIds;
+        }
+
+        String rewardsPrefix = SoomlaConfig.DB_KEY_PREFIX + "rewards.";
+        for (String key : kvKeys) {
+            if (key.startsWith(rewardsPrefix)) {
+                String rewardId = key.replace(rewardsPrefix, "");
+                int dotIndex = rewardId.indexOf('.');
+                if (dotIndex != -1) {
+                    rewardId = rewardId.substring(0, dotIndex);
+                }
+                rewardIds.add(rewardId);
+            }
+        }
+
+        return rewardIds;
     }
 }
