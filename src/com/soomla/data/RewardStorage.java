@@ -211,6 +211,8 @@ public class RewardStorage {
             return false;
         }
 
+        List<String> rewardIds = getRewardIds();
+
         try {
             Iterator keysIter = state.keys();
             while (keysIter.hasNext()) {
@@ -226,11 +228,22 @@ public class RewardStorage {
                     long lastGiven = itemValuesJSON.getLong("lastGiven");
                     setLastGivenTimeMillis(rewardId, lastGiven);
                 }
+
+                rewardIds.remove(rewardId);
             }
         }
         catch (JSONException e) {
             SoomlaUtils.LogError(TAG, "Unable to set state for rewards. error: " + e.getLocalizedMessage());
             return false;
+        }
+
+        // When resetting state we should remove all rewards' state which
+        // were not in the sync state (so the state is inline with the provided
+        // state)
+        for (String rewardId : rewardIds) {
+            KeyValueStorage.deleteKeyValue(keyRewardTimesGiven(rewardId));
+            KeyValueStorage.deleteKeyValue(keyRewardLastGiven(rewardId));
+            KeyValueStorage.deleteKeyValue(keyRewardIdxSeqGiven(rewardId));
         }
 
         return true;
@@ -251,7 +264,9 @@ public class RewardStorage {
                 if (dotIndex != -1) {
                     rewardId = rewardId.substring(0, dotIndex);
                 }
-                rewardIds.add(rewardId);
+                if (!rewardIds.contains(rewardId)) {
+                    rewardIds.add(rewardId);
+                }
             }
         }
 
