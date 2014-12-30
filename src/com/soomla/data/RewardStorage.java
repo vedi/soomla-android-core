@@ -23,8 +23,6 @@ import com.soomla.SoomlaConfig;
 import com.soomla.SoomlaUtils;
 import com.soomla.events.RewardGivenEvent;
 import com.soomla.events.RewardTakenEvent;
-import com.soomla.rewards.Reward;
-import com.soomla.rewards.SequenceReward;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,8 +44,10 @@ public class RewardStorage {
 
     private static final String TAG = "SOOMLA RewardStorage";
 
+    private static final String DB_KEY_REWARDS = SoomlaConfig.DB_KEY_PREFIX + "rewards.";
+
     private static String keyRewards(String rewardId, String postfix) {
-        return SoomlaConfig.DB_KEY_PREFIX + "rewards." + rewardId + "." + postfix;
+        return DB_KEY_REWARDS + rewardId + "." + postfix;
     }
 
     private static String keyRewardTimesGiven(String rewardId) {
@@ -163,8 +163,7 @@ public class RewardStorage {
         KeyValueStorage.setValue(key, String.valueOf(total));
 
         if (up) {
-            key = keyRewardLastGiven(rewardId);
-            KeyValueStorage.setValue(key, String.valueOf(new Date().getTime()));
+            resetTimesGiven(rewardId, total);
         }
 
         if (notify) {
@@ -250,16 +249,15 @@ public class RewardStorage {
     }
 
     private static List<String> getRewardIds() {
-        List<String> kvKeys = KeyValueStorage.getAllKeysUnencrypted();
+        List<String> kvKeys = KeyValueStorage.getEncryptedKeys();
         List<String> rewardIds = new ArrayList<String>();
         if (kvKeys == null) {
             return rewardIds;
         }
 
-        String rewardsPrefix = SoomlaConfig.DB_KEY_PREFIX + "rewards.";
         for (String key : kvKeys) {
-            if (key.startsWith(rewardsPrefix)) {
-                String rewardId = key.replace(rewardsPrefix, "");
+            if (key.startsWith(DB_KEY_REWARDS)) {
+                String rewardId = key.replace(DB_KEY_REWARDS, "");
                 int dotIndex = rewardId.indexOf('.');
                 if (dotIndex != -1) {
                     rewardId = rewardId.substring(0, dotIndex);

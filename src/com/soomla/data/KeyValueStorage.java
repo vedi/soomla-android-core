@@ -174,7 +174,7 @@ public class KeyValueStorage {
      *
      * @return a List of unencrypted keys
      */
-    public static List<String> getAllKeysUnencrypted() {
+    public static List<String> getEncryptedKeys() {
         SoomlaUtils.LogDebug(TAG, "trying to fetch all keys");
 
         List<String> encryptedKeys = getDatabase().getAllKeys();
