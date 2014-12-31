@@ -23,7 +23,9 @@ import com.soomla.SoomlaConfig;
 import com.soomla.SoomlaUtils;
 import com.soomla.util.AESObfuscator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class provides basic storage operations for a simple key-value store.
@@ -167,7 +169,28 @@ public class KeyValueStorage {
         return getDatabase().getQueryCount(query);
     }
 
+    /**
+     * Gets all keys in the storage with no encryption
+     *
+     * @return a List of unencrypted keys
+     */
+    public static List<String> getEncryptedKeys() {
+        SoomlaUtils.LogDebug(TAG, "trying to fetch all keys");
 
+        List<String> encryptedKeys = getDatabase().getAllKeys();
+        List<String> resultKeys = new ArrayList<String>();
+
+        for (String encryptedKey : encryptedKeys) {
+            try {
+                String unencryptedKey = getAESObfuscator().unobfuscateToString(encryptedKey);
+                resultKeys.add(unencryptedKey);
+            } catch (AESObfuscator.ValidationException e) {
+                SoomlaUtils.LogError(TAG, e.getMessage());
+            }
+        }
+
+        return resultKeys;
+    }
 
     /**
      * Sets the given value to the given key.
