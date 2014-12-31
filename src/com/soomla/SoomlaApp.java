@@ -19,6 +19,8 @@ package com.soomla;
 import android.app.Application;
 import android.content.Context;
 
+import com.soomla.events.AppToBackgroundEvent;
+
 public class SoomlaApp extends Application{
 
 	protected static SoomlaApp mInstance = null;
@@ -27,13 +29,29 @@ public class SoomlaApp extends Application{
     	return mInstance;
     }
 
+    private Thread.UncaughtExceptionHandler defaultUEH;
+
+    public static Foreground ForegroundService;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
         context = getApplicationContext();
-    }
 
+        ForegroundService = Foreground.init();
+
+        defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
+        {
+            @Override
+            public void uncaughtException (Thread thread, Throwable e)
+            {
+                BusProvider.getInstance().post(new AppToBackgroundEvent());
+                defaultUEH.uncaughtException(thread, e);
+            }
+        });
+    }
 
     /** Setters and Getters */
 
@@ -49,4 +67,6 @@ public class SoomlaApp extends Application{
     /** Private Members */
 
     private static Context context;
+
+
 }
