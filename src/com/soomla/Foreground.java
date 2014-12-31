@@ -28,6 +28,7 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
     private boolean foreground = false, paused = true;
     private Handler handler = new Handler();
     private Runnable check;
+    private int count = 0;
 
     public boolean OutsideOperation = false;
 
@@ -91,7 +92,9 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        count++;
+    }
 
     @Override
     public void onActivityStarted(Activity activity) {}
@@ -103,5 +106,11 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
 
     @Override
-    public void onActivityDestroyed(Activity activity) {}
+    public void onActivityDestroyed(Activity activity) {
+        count--;
+        if (count==0 && isForeground()) {
+            SoomlaUtils.LogDebug(TAG, "destroyed weirdly");
+            BusProvider.getInstance().post(new AppToBackgroundEvent());
+        }
+    }
 }
