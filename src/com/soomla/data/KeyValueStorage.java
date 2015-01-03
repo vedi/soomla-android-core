@@ -185,6 +185,8 @@ public class KeyValueStorage {
                 String unencryptedKey = getAESObfuscator().unobfuscateToString(encryptedKey);
                 resultKeys.add(unencryptedKey);
             } catch (AESObfuscator.ValidationException e) {
+                SoomlaUtils.LogDebug(TAG, e.getMessage());
+            } catch (RuntimeException e) {
                 SoomlaUtils.LogError(TAG, e.getMessage());
             }
         }
