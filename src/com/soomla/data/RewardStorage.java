@@ -158,12 +158,10 @@ public class RewardStorage {
 
     private static void setTimesGiven(String rewardId, boolean up, boolean notify) {
         int total = getTimesGiven(rewardId) + (up ? 1 : -1);
-        String key = keyRewardTimesGiven(rewardId);
-
-        KeyValueStorage.setValue(key, String.valueOf(total));
+        resetTimesGiven(rewardId, total);
 
         if (up) {
-            resetTimesGiven(rewardId, total);
+            setLastGivenTimeMillis(rewardId, new Date().getTime());
         }
 
         if (notify) {
