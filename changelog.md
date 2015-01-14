@@ -1,3 +1,9 @@
+### v1.0.2 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.1...v1.0.2)
+
+* Fixes
+  * Foreground is disabled on android versions < ICS
+  * Foreground will be available on versions < ICS but events are only available on versions >= ICS
+
 ### v1.0.1 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.0...v1.0.1)
 
 * New Features
