@@ -40,6 +40,14 @@ public class SoomlaApp extends Application{
         mInstance = this;
         context = getApplicationContext();
 
+        // Fixing AsyncTask not found exception
+        try {
+            Class.forName("android.os.AsyncTask");
+        }
+        catch(Throwable ignore) {
+            // ignored
+        }
+
         ForegroundService = Foreground.init();
 
         defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
