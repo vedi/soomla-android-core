@@ -1,3 +1,8 @@
+### v1.0.3 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.2...v1.0.3)
+
+* Fixes
+  * Fixing AsyncTask class not found for lower Android versions as proposed [here](http://stackoverflow.com/questions/6968744/getting-noclassdeffounderror-android-os-asynctask)
+
 ### v1.0.2 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.1...v1.0.2)
 
 * Fixes
