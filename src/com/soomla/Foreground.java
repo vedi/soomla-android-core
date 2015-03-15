@@ -14,7 +14,6 @@ import com.soomla.events.AppToForegroundEvent;
 
 import java.util.List;
 
-
 /**
  * This implementation is based on the great article by Steve Liles:
  * http://steveliles.github.io/is_my_android_app_currently_foreground_or_background.html
@@ -22,6 +21,17 @@ import java.util.List;
  * Thanks Steve!
  */
 
+
+/**
+ * This Class Helps the app determine if it's running on the background or not.
+ *
+ * Special Cases:
+ * 1. Changing Orientation - Always report that the app is at the foreground.
+ * 2. Incoming Call - Report background. once the call ended, report foreground.
+ * 3. Store purchases (Amazon, Google play, etc...) - Always report that the app is at the foreground.
+ * 4. Pressable Notification - Report background, once the user clicks "ok" report foreground.
+ *
+ */
 public abstract class Foreground {
 
     private static Foreground instance;
@@ -29,7 +39,10 @@ public abstract class Foreground {
     public static final String TAG = "SOOMLA " + Foreground.class.getName();
 
     // used to know if there's an outside operation running and the app will return to foreground soon.
-    public boolean OutsideOperation = false;
+    public boolean OutsideOperation = false; // should be deprecated
+
+    // Orientation change flag
+    boolean isChangingOrientation = false;
 
     /**
      * Initializes Foreground
@@ -41,7 +54,8 @@ public abstract class Foreground {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 instance = new ForegroundNew();
             } else {
-                instance = new ForegroundOld();
+                // instance = new ForegroundOld();
+                SoomlaUtils.LogDebug(TAG, "Tried to instantiate ForegroundOld");
             }
         }
         return instance;
@@ -77,76 +91,75 @@ public abstract class Foreground {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static class ForegroundNew extends Foreground implements Application.ActivityLifecycleCallbacks {
-        private static final long CHECK_DELAY = 500;
 
-        private boolean foreground = false, paused = true;
-        private Handler handler = new Handler();
-        private Runnable check;
         private int count = 0;
+        private int refs = 0;
 
+        // Constructor for inheriting class
         public ForegroundNew() {
             SoomlaApp.instance().registerActivityLifecycleCallbacks(this);
         }
 
         @Override
         public boolean isForeground() {
-            return foreground;
+            return refs > 0;
         }
 
         @Override
         public boolean isBackground() {
-            return !foreground;
+            return refs == 0;
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
-            paused = false;
-            boolean wasBackground = !foreground;
-            foreground = true;
-
-            if (check != null)
-                handler.removeCallbacks(check);
-
-            if (wasBackground) {
-                SoomlaUtils.LogDebug(TAG, "went foreground");
-                BusProvider.getInstance().post(new AppToForegroundEvent());
-            } else {
-                SoomlaUtils.LogDebug(TAG, "still foreground");
-            }
+            SoomlaUtils.LogDebug(TAG, "ActivityResumed " + activity.getLocalClassName() + " , refs = " + refs );
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-            paused = true;
-
-            if (check != null)
-                handler.removeCallbacks(check);
-
-            handler.postDelayed(check = new Runnable() {
-                @Override
-                public void run() {
-                    if (foreground && paused && !OutsideOperation) {
-                        foreground = false;
-                        SoomlaUtils.LogDebug(TAG, "went background");
-                        BusProvider.getInstance().post(new AppToBackgroundEvent());
-                    } else {
-                        SoomlaUtils.LogDebug(TAG, "still foreground");
-                    }
-                }
-            }, CHECK_DELAY);
+            SoomlaUtils.LogDebug(TAG, "ActivityPaused " + activity.getLocalClassName() + " , refs = " + refs );
         }
 
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             count++;
+            SoomlaUtils.LogDebug(TAG, "ActivityCreated " + activity.getLocalClassName() + " , refs = " + refs );
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
+
+            SoomlaUtils.LogDebug(TAG, "ActivityStarted " + activity.getLocalClassName() + " start, refs = " + refs );
+
+            // Checking the number of refs to determine the state we were at
+            if (++refs == 1 && !isChangingOrientation) {
+                // Passed to foreground, so posting event
+                BusProvider.getInstance().post(new AppToForegroundEvent());
+                SoomlaUtils.LogDebug(TAG, "became foreground");
+            } else {
+                SoomlaUtils.LogDebug(TAG, "still foreground");
+            }
+            SoomlaUtils.LogDebug(TAG, "ActivityStarted " + activity.getLocalClassName() + " end, refs = " + refs );
         }
+
 
         @Override
         public void onActivityStopped(Activity activity) {
+
+            SoomlaUtils.LogDebug(TAG, "ActivityStopped " + activity.getLocalClassName() + " start, refs = " + refs );
+
+            isChangingOrientation = activity.isChangingConfigurations();
+
+            // Checking if we're backgrounded
+            if (--refs <= 0 && !isChangingOrientation) {
+                // app went to background - posting event
+                BusProvider.getInstance().post(new AppToBackgroundEvent());
+                SoomlaUtils.LogDebug(TAG, "became background");
+            } else {
+                SoomlaUtils.LogDebug(TAG, "still foreground");
+            }
+
+            SoomlaUtils.LogDebug(TAG, "ActivityStopped " + activity.getLocalClassName() + " end, refs = " + refs );
         }
 
         @Override
@@ -155,11 +168,16 @@ public abstract class Foreground {
 
         @Override
         public void onActivityDestroyed(Activity activity) {
+
+            SoomlaUtils.LogDebug(TAG, "ActivityDestroyed " + activity.getLocalClassName() + " start, refs = " + refs );
+
             count--;
             if (count == 0 && isForeground()) {
                 SoomlaUtils.LogDebug(TAG, "destroyed weirdly");
                 BusProvider.getInstance().post(new AppToBackgroundEvent());
             }
+
+            SoomlaUtils.LogDebug(TAG, "ActivityDestroyed " + activity.getLocalClassName() + " end, refs = " + refs );
         }
     }
 }
