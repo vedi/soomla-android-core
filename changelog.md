@@ -1,3 +1,8 @@
+### v1.0.4 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.4...v1.0.4)
+
+* Fixes
+  * Changed the way we count references for Foreground service
+
 ### v1.0.3 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.2...v1.0.3)
 
 * Fixes
