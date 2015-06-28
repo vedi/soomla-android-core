@@ -1,3 +1,8 @@
+### v1.0.5 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.5...v1.0.5)
+
+* Changes
+  * Rebuilt library with Java 1.7
+
 ### v1.0.4 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.4...v1.0.4)
 
 * Fixes
