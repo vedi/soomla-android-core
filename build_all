@@ -1,1 +1,3 @@
-ant -buildfile soomla-android-core.xml -Dsoomla.filename="SoomlaAndroidCore" all
+filename="SoomlaAndroidCore"
+rm build/$filename
+ant -buildfile soomla-android-core.xml -Dsoomla.filename="$filename" all
