@@ -33,7 +33,7 @@ import java.util.List;
 public class KeyValueStorage {
 
     /**
-     * Retrieves the value for the given key.
+     * Retrieves the value for the given key
      *
      * @param key is the key in the key-val pair
      * @return the value for the given key
