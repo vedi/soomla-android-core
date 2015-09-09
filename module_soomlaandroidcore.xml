@@ -19,23 +19,23 @@
 
   <path id="soomlaandroidcore.module.production.classpath">
     <path refid="${module.jdk.classpath.soomlaandroidcore}"/>
-    <pathelement location="${basedir}/build/square-otto-1.3.2.jar"/>
+    <pathelement location="${basedir}/libs/square-otto-1.3.2.jar"/>
   </path>
 
   <path id="soomlaandroidcore.runtime.production.module.classpath">
     <pathelement location="${soomlaandroidcore.output.dir}"/>
-    <pathelement location="${basedir}/build/square-otto-1.3.2.jar"/>
+    <pathelement location="${basedir}/libs/square-otto-1.3.2.jar"/>
   </path>
 
   <path id="soomlaandroidcore.module.classpath">
     <path refid="${module.jdk.classpath.soomlaandroidcore}"/>
     <pathelement location="${soomlaandroidcore.output.dir}"/>
-    <pathelement location="${basedir}/build/square-otto-1.3.2.jar"/>
+    <pathelement location="${basedir}/libs/square-otto-1.3.2.jar"/>
   </path>
 
   <path id="soomlaandroidcore.runtime.module.classpath">
     <pathelement location="${soomlaandroidcore.output.dir}"/>
-    <pathelement location="${basedir}/build/square-otto-1.3.2.jar"/>
+    <pathelement location="${basedir}/libs/square-otto-1.3.2.jar"/>
   </path>
 
 
