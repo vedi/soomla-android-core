@@ -36,6 +36,7 @@ proguard/
 
 ## Additional for IntelliJ
 out/
+
 build/
 
 #Log Files
