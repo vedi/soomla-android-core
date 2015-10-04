@@ -22,6 +22,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.soomla.DbSaver;
+import com.soomla.DbWorker;
 import com.soomla.SoomlaConfig;
 
 import java.util.ArrayList;
@@ -46,6 +48,13 @@ public class KeyValDatabase {
 
         mDatabaseHelper = new DatabaseHelper(context);
         mStoreDB = mDatabaseHelper.getWritableDatabase();
+
+        mDbWorker = new DbWorker(new DbSaver() {
+            @Override
+            public void save(String key, String value) {
+                KeyValDatabase.this.setKeyVal(key, value);
+            }
+        }, this);
     }
 
     /**
@@ -97,23 +106,22 @@ public class KeyValDatabase {
      * @param key the key of the key-val pair
      * @return a value for the given key
      */
-    public synchronized String getKeyVal(String key) {
-        Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
-                + "='" + key + "'",
-                null, null, null, null);
- 
-        if (cursor != null && cursor.moveToNext()) {
-            int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
-            String ret = cursor.getString(valColIdx);
-            cursor.close();
-            return ret;
+    public String getKeyVal(String key) {
+        String value = mDbWorker.get(key);
+        if (value == null) {
+            value = fetchValue(key);
         }
-        
-        if(cursor != null) {
-        	cursor.close();
-        }
-        
-        return null;
+        return value;
+    }
+
+    /**
+     * Sets the given value to the given key asynchronously.
+     *
+     * @param key the key of the key-val pair
+     * @param val the val of the key-val pair
+     */
+    public void setKeyValAsync(String key, String val) {
+        mDbWorker.put(key, val);
     }
 
     /**
@@ -262,4 +270,27 @@ public class KeyValDatabase {
     private SQLiteDatabase mStoreDB;
 
     private DatabaseHelper mDatabaseHelper;
+
+    private DbWorker mDbWorker;
+
+    private synchronized String fetchValue(String key) {
+        Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
+                        + "='" + key + "'",
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToNext()) {
+            int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
+            String ret = cursor.getString(valColIdx);
+            cursor.close();
+            return ret;
+        }
+
+        if(cursor != null) {
+            cursor.close();
+        }
+
+        return null;
+    }
+
+
 }
