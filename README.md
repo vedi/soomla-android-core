@@ -23,9 +23,14 @@ SOOMLA modules internally use these features, though we encourage you to use the
 
 ## Download
 
-####Pre baked jar:
+#### Pre baked jar:
 
-[soomla-android-core v1.0.5](http://library.soom.la/fetch/android-core/1.0.5?cf=github)
+-[soomla-android-core v1.0.5](http://library.soom.la/fetch/android-core/1.0.5?cf=github)
+
+#### From sources:
+ - Clone this repository recursively: `git clone --recursive https://github.com/soomla/soomla-android-core.git`;
+ - Run `./build_all` from project directory;
+ - Take created binaries from `build` directory and use it!
 
 Our way of saying "Thanks !"
 ---
