@@ -1,1 +1,3 @@
 language: android
+install: true
+script: ant -buildfile soomla-android-core.xml -Dsoomla.filename="SoomlaAndroidCore" all
