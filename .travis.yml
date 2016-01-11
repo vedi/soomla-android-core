@@ -2,5 +2,5 @@ language: android
 sudo: false
 install: true
 script:
-- ./download_deps
-- ant -buildfile soomla-android-core.xml -Dsoomla.filename="SoomlaAndroidCore" all
+    - ./download_deps
+    - ant -buildfile soomla-android-core.xml -Dsoomla.filename="SoomlaAndroidCore" all

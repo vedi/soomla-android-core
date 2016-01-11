@@ -39,12 +39,22 @@ public class KeyValDatabase {
      * @param context global information about the application environment
      */
     public KeyValDatabase(Context context) {
+        this(context, KeyValueStorage.SOOMLA_DATABASE_NAME);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param context global information about the application environment
+     * @param dbName name of the db to use
+     */
+    public KeyValDatabase(Context context, String dbName) {
 
         if (SoomlaConfig.DB_DELETE){
-            context.deleteDatabase(DATABASE_NAME);
+            context.deleteDatabase(dbName);
         }
 
-        mDatabaseHelper = new DatabaseHelper(context);
+        mDatabaseHelper = new DatabaseHelper(context, dbName);
         mStoreDB = mDatabaseHelper.getWritableDatabase();
     }
 
@@ -61,7 +71,26 @@ public class KeyValDatabase {
      * @param context global information about the application environment
      */
     public void purgeDatabase(Context context) {
-        context.deleteDatabase(DATABASE_NAME);
+        purgeDatabase(context, KeyValueStorage.SOOMLA_DATABASE_NAME);
+    }
+
+    /**
+     * Deletes the database completely!
+     *
+     * @param context global information about the application environment
+     * @param dbName name of the db to purge
+     */
+    public void purgeDatabase(Context context, String dbName) {
+        context.deleteDatabase(dbName);
+    }
+
+    /**
+     * Deletes the database contents
+     *
+     * @param context global information about the application environment
+     */
+    public void purgeDatabaseEntries(Context context) {
+        mStoreDB.delete(KEYVAL_TABLE_NAME, null, null);
     }
 
     /**
@@ -99,20 +128,20 @@ public class KeyValDatabase {
      */
     public synchronized String getKeyVal(String key) {
         Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
-                + "='" + key + "'",
-                null, null, null, null);
- 
+						+ "='" + key + "'",
+				null, null, null, null);
+
         if (cursor != null && cursor.moveToNext()) {
             int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
             String ret = cursor.getString(valColIdx);
             cursor.close();
             return ret;
         }
-        
+
         if(cursor != null) {
         	cursor.close();
         }
-        
+
         return null;
     }
 
@@ -126,17 +155,89 @@ public class KeyValDatabase {
     }
 
     public synchronized HashMap<String, String> getQueryVals(String query) {
+        return getQueryVals(query, 0);
+    }
+
+	public synchronized HashMap<String, String> getQueryVals(String query, int limit) {
+		query = query.replace('*', '%');
+		Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
+						+ " LIKE '" + query + "'",
+				null, null, null, null, limit <= 0? null : Integer.toString(limit));
+
+		HashMap<String, String> ret = new HashMap<String, String>();
+		while (cursor != null && cursor.moveToNext()) {
+			try {
+				int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
+				int keyColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_KEY);
+				ret.put(cursor.getString(keyColIdx), cursor.getString(valColIdx));
+			} catch (IllegalArgumentException exx) {
+			}
+		}
+
+		if(cursor != null) {
+			cursor.close();
+		}
+
+		return ret;
+	}
+
+    public synchronized String getQueryOne(String query) {
         query = query.replace('*', '%');
         Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, KEYVAL_COLUMNS, KEYVAL_COLUMN_KEY
-                + " LIKE '" + query + "'",
-                null, null, null, null);
+                        + " LIKE '" + query + "'",
+                null, null, null, null, "1");
 
-        HashMap<String, String> ret = new HashMap<String, String>();
+        if(cursor != null) {
+            boolean moved = cursor.moveToFirst();
+            if (moved) {
+                int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
+                String ret = cursor.getString(valColIdx);
+
+                cursor.close();
+
+                return ret;
+            }
+        }
+//        String ret = null;
+//        while (cursor != null && cursor.moveToNext()) {
+//            try {
+//                int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
+//                ret = cursor.getString(valColIdx);
+//            } catch (IllegalArgumentException exx) {
+//            }
+//        }
+
+        return null;
+
+
+    }
+
+    public synchronized int getQueryCount(String query) {
+        query = query.replace('*', '%');
+        Cursor cursor = mStoreDB.rawQuery("SELECT COUNT(" + KEYVAL_COLUMN_VAL + ") from " +
+                        KEYVAL_TABLE_NAME + " WHERE " + KEYVAL_COLUMN_KEY + " LIKE '" + query +"'", null);
+        if(cursor != null) {
+            boolean moved = cursor.moveToFirst();
+            if (moved) {
+                int count = cursor.getInt(0);
+                cursor.close();
+
+                return count;
+            }
+        }
+
+        return 0;
+    }
+
+    public synchronized List<String> getAllKeys() {
+        Cursor cursor = mStoreDB.query(KEYVAL_TABLE_NAME, new String[] { KEYVAL_COLUMN_KEY },
+                null, null, null, null, null);
+
+        List<String> ret = new ArrayList<String>();
         while (cursor != null && cursor.moveToNext()) {
             try {
-                int valColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_VAL);
                 int keyColIdx = cursor.getColumnIndexOrThrow(KEYVAL_COLUMN_KEY);
-                ret.put(cursor.getString(keyColIdx), cursor.getString(valColIdx));
+                ret.add(cursor.getString(keyColIdx));
             } catch (IllegalArgumentException exx) {
             }
         }
@@ -221,8 +322,8 @@ public class KeyValDatabase {
      */
     private class DatabaseHelper extends SQLiteOpenHelper{
 
-        public DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, 1);
+        public DatabaseHelper(Context context, String dbName) {
+            super(context, dbName, null, 1);
         }
 
         @Override
@@ -256,8 +357,6 @@ public class KeyValDatabase {
     /** Private Members **/
 
     private static final String TAG = "KeyValDatabase"; //used for Log messages
-
-    private static final String DATABASE_NAME  = "store.kv.db";
 
     private SQLiteDatabase mStoreDB;
 

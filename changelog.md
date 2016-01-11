@@ -1,3 +1,13 @@
+### v1.1.0 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.5...v1.1.0)
+
+* New Features
+  * KeyValueStorage - changed to allow multiple instances with different storage
+  * KeyValueStorage - added method of getting query values with limit
+  * Added generating a unique id per installation if androidId can't be fetched
+
+* Changes
+  * Removed libs from repo and added scripts to download dependencies
+
 ### v1.0.5 [view commit logs](https://github.com/soomla/soomla-android-core/compare/v1.0.5...v1.0.5)
 
 * Changes
